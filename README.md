@@ -14,10 +14,15 @@ Halqil - bu dasturchilar uchun yaratilgan platforma bo'lib, u yerda foydalanuvch
 ## 🔧 O'rnatish
 
 Loyihani ishga tushirish uchun quyidagi amallarni bajaring:
+Lekin server localhostda bo'lganligi uchun ishlata olmaysiz
+Bu esa server codelari
+```bash
+git clone https://github.com/the-ict/Halqil-backend.git
+```
 
 ```bash
 # Repozitoriyani klonlash
-git clone https://github.com/username/Halqil.git
+git clone https://github.com/the-ict/Halqil-frontend.git
 
 # Loyihaga kirish
 cd Halqil
@@ -44,8 +49,8 @@ Agar siz loyihani yaxshilashni xohlasangiz, quyidagi amallarni bajaring:
 
 Agar sizda biron-bir savol yoki taklif bo'lsa, quyidagi manzillar orqali biz bilan bog'lanishingiz mumkin:
 
-- Email: example@example.com
-- Telegram: @username
+- Email: dvltinv@gmail.com
+- Telegram: @use_ict
 
 ---
 
