@@ -42,7 +42,7 @@ export default function Register() {
                     <i className="ml-3 fa-brands fa-google"></i>
                 </button>
                 <div className='flex justify-center items-center gap-3'>
-                    <p>Sizda akkaunt bormi ?</p><a className='underline text-blue-400 cursor-pointer'>Kirish</a>
+                    <p>Sizda akkaunt bormi ?</p><a href="/login" className='underline text-blue-400 cursor-pointer'>Kirish</a>
                 </div>
             </div>
             <img className='w-1/2 h-[100vh] object-cover rounded-2xl' src={Bg} alt="background img" />

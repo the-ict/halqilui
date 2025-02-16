@@ -10,8 +10,7 @@
 
 .slide-up {
     animation-name: slide-up;
-    animation-delay: 1s;
-    animation-duration: 1s;
+    animation-duration: 0.5s; /* Yoki 1s */
     animation-fill-mode: forwards;
 }
 
@@ -20,7 +19,6 @@
         transform: translateY(100%);
         opacity: 0;
     }
-
     100% {
         transform: translateY(0%);
         opacity: 1;

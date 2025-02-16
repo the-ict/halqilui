@@ -1,19 +1,177 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
+import ConfirmDeleting from './ConfirmDeleting'
+import EmojiPicker from 'emoji-picker-react'
 
-export default function Comment() {
+export default function Comment({ info }) {
+    const [editState, setEditState] = useState(false)
+    const [confirm, setConfirm] = useState(false)
+    const [editInput, setEditInput] = useState(info?.user_message)
+    const [author, setAuthor] = useState({})
+    const { user } = useSelector(store => store.user)
+    const [showMenu, setShowMenu] = useState(false)
+
+    const isAdmin = user?._id == info?.user_id
+
+    const commentRef = useRef(null)
+
+
+    useEffect(() => {
+        const findUser = async () => {
+            try {
+                if (info?.user_id) {
+                    const res = await axios.get(`/api/user/${info?.user_id}`)
+                    setAuthor(res.data)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        findUser()
+    }, [])
+
+
+    const handleDelete = async (media_id, setConfirm) => {
+        try {
+            console.log("media_id: ", media_id)
+            const res = await axios.delete(`/api/comment/${media_id}?user_id=${user._id}`, {
+                withCredentials: true
+            })
+            setConfirm(false)
+            if (res.data) {
+                window.location.reload()
+            }
+        } catch (error) {
+            setConfirm(false)
+            console.log(error)
+        }
+    }
+
+    const handleEdit = async () => {
+        try {
+            const res = await axios.put(`/api/comment/${info?._id}`, {
+                comment_author: user._id,
+                user_message: editInput
+            }, {
+                withCredentials: true
+            })
+
+            if (res.data) window.location.reload()
+
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleLike = async () => {
+        try {
+            const res = await axios.put(`/api/comment/like/${info?._id}/${user?._id}`)
+            console.log(res.data)
+            if (res.data) window.location.reload()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDislike = async () => {
+        try {
+            const res = await axios.put(`/api/comment/unlike/${info?._id}/${user?._id}`)
+            if (res.data) window.location.reload()
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
-        <div className='flex gap-4 items-center justify-between mt-3'>
-            <img className='w-[50px] h-[50px] object-cover rounded-full cursor-pointer' src="data:image/jpeg;base64,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" alt="" />
-            <div>
-                <p className='uppercase font-bold cursor-pointer text-[14px]'>javohir</p>
-                <p className='text-[14px]'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid nihil totam eum exercitationem nostrum, explicabo culpa praesentium harum nam incidunt minima aperiam assumenda libero architecto animi accusantium esse fugiat ratione.</p>
-                <div className='flex items-center gap-4'>
-                    <i className="cursor-pointer fa-regular fa-thumbs-up"></i>
-                    <i className="cursor-pointer fa-regular fa-thumbs-down"></i>
-                    <p className='cursor-pointer hover:bg-black hover:text-white px-2 py-1 rounded-3xl transition'>Javob yozish</p>
+        <div className='flex gap-4 items-center justify-between mt-3 relative w-full'>
+            <div className='flex gap-3 items-center flex-col'>
+                <div className='flex gap-3 items-center flex-1'>
+                    {
+                        author?.profile_pic ? (
+                            <img className='w-[50px] h-[50px] object-cover rounded-full cursor-pointer' src="www.google.com" alt="" />
+                        ) : (
+                            <i className="cursor-pointer fa-solid fa-user"></i>
+                        )
+                    }
+                    <div className='w-full'>
+                        <p ref={commentRef} className='uppercase font-bold cursor-pointer text-[14px]'>{author?.username}</p>
+                        {
+                            !editState ? (
+                                <p className='text-[14px] w-full'>
+                                    {info?.user_message}
+                                </p>
+                            ) : (
+                                <input type="text" className={`w-full h-full outline-none border-b-[1px] border-blue-200`} value={editInput} onChange={(e) => { setEditInput(e.target.value) }} />
+                            )
+                        }
+                        <div className='flex items-center gap-4'>
+                            {
+                                info?.likes.includes(user?._id) ? (
+                                    <i className="fa-solid fa-thumbs-up"></i>
+                                ) : (
+                                    <i onClick={handleLike} className="cursor-pointer fa-regular fa-thumbs-up"></i>
+                                )
+                            }
+                            {
+                                info?.dislikes.includes(user?._id) ? (
+                                    <i className="fa-solid fa-thumbs-down"></i>
+                                ) : (
+                                    <i onClick={handleDislike} className="cursor-pointer fa-regular fa-thumbs-down"></i>
+                                )
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
-            <i className="cursor-pointer text-2xl fa-solid fa-ellipsis-vertical"></i>
-        </div>
+
+
+            {
+                editState ? (
+                    <button className='cursor-pointer px-2 py-1 rounded hover:bg-black transition hover:text-white' onClick={handleEdit} >O'zgartirish</button>
+                ) : (
+                    isAdmin && (
+                        <i
+                            onClick={() => setShowMenu(!showMenu)}
+                            className="cursor-pointer text-2xl fa-solid fa-ellipsis-vertical active:bg-gray-100 p-2 rounded-full"></i>
+                    )
+                )
+            }
+            {
+                showMenu && (
+                    <div className={`absolute right-0 bottom-[-80px] z-20 bg-gray-100 p-3 rounded`}>
+                        <div onClick={() => {
+                            setEditState(true)
+                            setShowMenu(false)
+                        }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
+                            <span>O'zgartirish</span>
+                            <i className="fa-regular fa-pen-to-square"></i>
+                        </div>
+                        <div onClick={() => {
+                            setConfirm(!confirm)
+                            setShowMenu(false)
+                        }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
+                            <span>O'chirish</span>
+                            <i className="fa-solid fa-trash-can-arrow-up"></i>
+                        </div>
+                    </div>
+                )
+            }
+            {
+                confirm && (
+                    <ConfirmDeleting info={{
+                        text: "Commentni o'chirib tashlashni hohlaysizmi ?", no: (setMenu) => {
+                            setMenu(false)
+                        },
+                        setConfirm,
+                        media_id: info?._id,
+                        yes: handleDelete
+                    }} />
+                )
+            }
+        </div >
     )
 }
