@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import ConfirmDeleting from './ConfirmDeleting'
-import EmojiPicker from 'emoji-picker-react'
+import { mediaPath } from '../constants/mediaUrl'
 
 export default function Comment({ info }) {
     const [editState, setEditState] = useState(false)
@@ -88,88 +88,94 @@ export default function Comment({ info }) {
 
     return (
         <div className='flex gap-4 items-center justify-between mt-3 relative w-full'>
-            <div className='flex gap-3 items-center flex-col'>
-                <div className='flex gap-3 items-center flex-1'>
-                    {
-                        author?.profile_pic ? (
-                            <img className='w-[50px] h-[50px] object-cover rounded-full cursor-pointer' src="www.google.com" alt="" />
-                        ) : (
-                            <i className="cursor-pointer fa-solid fa-user"></i>
-                        )
-                    }
-                    <div className='w-full'>
-                        <p ref={commentRef} className='uppercase font-bold cursor-pointer text-[14px]'>{author?.username}</p>
+            {
+                author?.username && (
+                    <>
+                        <div className='flex gap-3 items-center flex-col'>
+                            <div className='flex gap-3 items-center flex-1'>
+                                {
+                                    author?.profile_pic ? (
+                                        <img className='w-[30px] h-[30px] object-cover rounded-full cursor-pointer' src={mediaPath + "/" + author?.profile_pic} alt="comment profile pic" />
+                                    ) : (
+                                        <i className="cursor-pointer fa-solid fa-user text-[30px]"></i>
+                                    )
+                                }
+                                <div className='w-full'>
+                                    <p ref={commentRef} className='uppercase font-bold cursor-pointer text-[14px]'>{author?.username}</p>
+                                    {
+                                        !editState ? (
+                                            <p className='text-[14px] w-full'>
+                                                {info?.user_message}
+                                            </p>
+                                        ) : (
+                                            <input type="text" className={`w-full h-full outline-none border-b-[1px] border-blue-200`} value={editInput} onChange={(e) => { setEditInput(e.target.value) }} />
+                                        )
+                                    }
+                                    <div className='flex items-center gap-4'>
+                                        {
+                                            info?.likes.includes(user?._id) ? (
+                                                <i className="fa-solid fa-thumbs-up"></i>
+                                            ) : (
+                                                <i onClick={handleLike} className="cursor-pointer fa-regular fa-thumbs-up"></i>
+                                            )
+                                        }
+                                        {
+                                            info?.dislikes.includes(user?._id) ? (
+                                                <i className="fa-solid fa-thumbs-down"></i>
+                                            ) : (
+                                                <i onClick={handleDislike} className="cursor-pointer fa-regular fa-thumbs-down"></i>
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                         {
-                            !editState ? (
-                                <p className='text-[14px] w-full'>
-                                    {info?.user_message}
-                                </p>
+                            editState ? (
+                                <button className='cursor-pointer px-2 py-1 rounded hover:bg-black transition hover:text-white' onClick={handleEdit} >O'zgartirish</button>
                             ) : (
-                                <input type="text" className={`w-full h-full outline-none border-b-[1px] border-blue-200`} value={editInput} onChange={(e) => { setEditInput(e.target.value) }} />
+                                isAdmin && (
+                                    <i
+                                        onClick={() => setShowMenu(!showMenu)}
+                                        className="cursor-pointer text-2xl fa-solid fa-ellipsis-vertical active:bg-gray-100 p-2 rounded-full"></i>
+                                )
                             )
                         }
-                        <div className='flex items-center gap-4'>
-                            {
-                                info?.likes.includes(user?._id) ? (
-                                    <i className="fa-solid fa-thumbs-up"></i>
-                                ) : (
-                                    <i onClick={handleLike} className="cursor-pointer fa-regular fa-thumbs-up"></i>
-                                )
-                            }
-                            {
-                                info?.dislikes.includes(user?._id) ? (
-                                    <i className="fa-solid fa-thumbs-down"></i>
-                                ) : (
-                                    <i onClick={handleDislike} className="cursor-pointer fa-regular fa-thumbs-down"></i>
-                                )
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            {
-                editState ? (
-                    <button className='cursor-pointer px-2 py-1 rounded hover:bg-black transition hover:text-white' onClick={handleEdit} >O'zgartirish</button>
-                ) : (
-                    isAdmin && (
-                        <i
-                            onClick={() => setShowMenu(!showMenu)}
-                            className="cursor-pointer text-2xl fa-solid fa-ellipsis-vertical active:bg-gray-100 p-2 rounded-full"></i>
-                    )
-                )
-            }
-            {
-                showMenu && (
-                    <div className={`absolute right-0 bottom-[-80px] z-20 bg-gray-100 p-3 rounded`}>
-                        <div onClick={() => {
-                            setEditState(true)
-                            setShowMenu(false)
-                        }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
-                            <span>O'zgartirish</span>
-                            <i className="fa-regular fa-pen-to-square"></i>
-                        </div>
-                        <div onClick={() => {
-                            setConfirm(!confirm)
-                            setShowMenu(false)
-                        }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
-                            <span>O'chirish</span>
-                            <i className="fa-solid fa-trash-can-arrow-up"></i>
-                        </div>
-                    </div>
-                )
-            }
-            {
-                confirm && (
-                    <ConfirmDeleting info={{
-                        text: "Commentni o'chirib tashlashni hohlaysizmi ?", no: (setMenu) => {
-                            setMenu(false)
-                        },
-                        setConfirm,
-                        media_id: info?._id,
-                        yes: handleDelete
-                    }} />
+                        {
+                            showMenu && (
+                                <div className={`absolute right-0 bottom-[-80px] z-20 bg-gray-100 p-3 rounded`}>
+                                    <div onClick={() => {
+                                        setEditState(true)
+                                        setShowMenu(false)
+                                    }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
+                                        <span>O'zgartirish</span>
+                                        <i className="fa-regular fa-pen-to-square"></i>
+                                    </div>
+                                    <div onClick={() => {
+                                        setConfirm(!confirm)
+                                        setShowMenu(false)
+                                    }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
+                                        <span>O'chirish</span>
+                                        <i className="fa-solid fa-trash-can-arrow-up"></i>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        {
+                            confirm && (
+                                <ConfirmDeleting info={{
+                                    text: "Commentni o'chirib tashlashni hohlaysizmi ?", no: (setMenu) => {
+                                        setMenu(false)
+                                    },
+                                    setConfirm,
+                                    media_id: info?._id,
+                                    yes: handleDelete
+                                }} />
+                            )
+                        }
+                    </>
                 )
             }
         </div >

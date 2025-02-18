@@ -7,6 +7,7 @@ import EmojiPicker from "emoji-picker-react"
 import { useLocation } from "react-router-dom"
 import axios from "axios"
 import { useSelector } from 'react-redux'
+import { mediaPath } from '../constants/mediaUrl'
 
 
 export default function SingleProblem() {
@@ -16,6 +17,7 @@ export default function SingleProblem() {
     const [problems, setProblems] = useState([])
     const [showEmoji, setShowEmoji] = useState(false)
     const [comment, setComment] = useState("")
+    const [imgWrapper, setImgWrapper] = useState(false)
 
     const { user } = useSelector(store => store.user)
 
@@ -39,7 +41,7 @@ export default function SingleProblem() {
                 if (location?.pathname) {
                     const res = await axios.put(`/api/problem/view/${location.pathname.split("/")[2]}`)
                     setPost(res.data)
-                    console.log(res.data)
+                    console.log(res.data, "post")
                 }
             } catch (error) {
                 console.log(error)
@@ -47,10 +49,20 @@ export default function SingleProblem() {
         }
         singlePost()
 
+        getComments()
+    }, [])
+
+    useEffect(() => {
+        getComments()
+    }, [comment])
+
+    useEffect(() => {
         const findUser = async () => {
             try {
-                if (info?.author_id) {
+                if (post?.author_id) {
+                    console.log("bor")
                     const res = await axios.get(`/api/user/${post?.author_id}`)
+                    console.log("author id: ", res.data)
                     setUsername(res.data.username)
                 }
             } catch (error) {
@@ -58,28 +70,17 @@ export default function SingleProblem() {
             }
         }
         findUser()
-
-        getComments()
-
         const getProblems = async () => {
             try {
-                const res = await axios.post("/api/problem/find", {
-                    category: [...post?.category]
-                })
+                const res = await axios.get(`/api/problem/?category=${post?.category.toString()}`);
                 setProblems(res.data)
-                console.log("category: ", res.data)
             } catch (error) {
-                console.log(error)
+                console.log("problems error:", error)
             }
         }
-
         getProblems()
 
-    }, [])
-
-    useEffect(() => {
-        getComments()
-    }, [comment])
+    }, [post])
 
 
     const handleComment = async () => {
@@ -99,19 +100,21 @@ export default function SingleProblem() {
     }
 
 
+    const handleCancel = async () => {
+        setComment("")
+    }
+
     return (
         <div>
             <Navbar />
-            <div className='flex mx-30 gap-10 font-inter mt-3 min-h-screen'>
-                <div className='p-2 rounded mb-3 h-min[calc(100vh-62px)] flex-3 '>
+            <div className='flex max-md:flex-col max-md:gap-0 mx-30 gap-10 font-inter mt-3 min-h-screen max-lg:mx-2'>
+                <div className='p-2 rounded mb-3 h-min[calc(100vh-62px)] flex-3 max-md:flex-0 '>
                     <h3 className='font-bold tracking-wider '>{post.title}</h3>
-                    <p><a href="/" className='text-blue-500 underline'>{username}</a> tomonidan <b>{post?.views}</b> martda ko'rilgan</p>
+                    <p><a href="/" className='text-blue-500 underline'>{username}</a> tomonidan yaratilgan <b>{post?.views}</b> martda ko'rilgan</p>
                     <div className='flex items-center mt-3 gap-3 flex-wrap'>
                         {
-                            post?.images?.length > 0 && (
-                                post?.images.map(image => {
-                                    <img className='w-[40%] h-[200px] object-cover cursor-pointer hover:scale-105 transition' src={image} key={image} alt={image} />
-                                })
+                            post?.image && (
+                                <img onClick={() => { setImgWrapper(!imgWrapper) }} className={`w-full h-[200px] object-cover cursor-pointer transition-all ${imgWrapper && "fixed w-screen h-screen left-0 top-0 z-50"}`} src={mediaPath + "/" + post?.image} alt='image' />
                             )
                         }
                     </div>
@@ -121,10 +124,24 @@ export default function SingleProblem() {
                         }
                     </p>
                     <h1 className='mt-3'>Izohlar: {comments.length == 0 && 0}</h1>
+                    <div className='flex items-center gap-3 mt-3'>{
+                        post?.category && (
+                            post?.category.map(item => {
+                                return (
+                                    <div
+                                        key={item}
+                                        className='text-[10px] bg-gray-200 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
+                                        <i className="fa-solid fa-check"></i>
+                                        <p>{item}</p>
+                                    </div>
+                                )
+                            })
+                        )
+                    }</div>
                     <div className='flex items-center gap-4 w-full mt-3 h-max'>
                         {
                             user?.profile_pic ? (
-                                <img className='w-[50px] h-[50px] object-cover rounded-full cursor-pointer' src="https://static.vecteezy.com/system/resources/thumbnails/007/209/020/small_2x/close-up-shot-of-happy-dark-skinned-afro-american-woman-laughs-positively-being-in-good-mood-dressed-in-black-casual-clothes-isolated-on-grey-background-human-emotions-and-feeligs-concept-photo.jpg" alt="" />
+                                <img className='w-[50px] h-[50px] object-cover rounded-full cursor-pointer' src={mediaPath + "/" + user?.profile_pic} alt="profile picture" />
                             ) : (
                                 <i className="cursor-pointer fa-solid fa-user"></i>
                             )
@@ -136,7 +153,7 @@ export default function SingleProblem() {
                                 type="text"
                                 placeholder='Fikringiz!'
                                 className='w-full h-[30px] outline-none focus:border-b-[1px] transition-all border-b-blue-500' />
-                            <div className='flex justify-between mt-3 relative'>
+                            <div className='flex justify-between mt-3 relative items-center'>
                                 <i className="cursor-pointer fa-solid fa-face-smile"
                                     onClick={() => setShowEmoji(!showEmoji)}></i>
                                 {
@@ -155,31 +172,34 @@ export default function SingleProblem() {
                                     )
                                 }
                                 <div className='flex items-center gap-4'>
-                                    <button className='cursor-pointer hover:bg-black rounded-3xl hover:text-white px-3 py-1 transition outline-none'>Bekor qilish</button>
+                                    <button
+                                        onClick={handleCancel}
+                                        className='cursor-pointer hover:bg-black rounded-3xl hover:text-white px-3 py-1 transition outline-none max-md:text-[12px] max-md:px-0'>Bekor qilish</button>
                                     <button
                                         onClick={handleComment}
-                                        className='cursor-pointer hover:bg-blue-800 rounded-3xl hover:text-white px-3 py-1 transition outline-none'>Jo'natish</button>
+                                        className='cursor-pointer hover:bg-blue-800 rounded-3xl hover:text-white px-3 py-1 transition outline-none max-md:text-[12px] max-md:px-0'>Jo'natish</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className='mt-3'>
                         {
-                            comments.map(comment => {
+                            comments.map(com => {
                                 return (
-                                    <Comment info={comment} key={comment?._id} />
+                                    <Comment info={com} key={com?._id} />
                                 )
-                            })
-                        }
+                            })}
                     </div>
                 </div>
-                <div className='flex-2'>
-                    <h3 className='font-bold tracking-wide'>Shunga o'xshagan muammolar:{problems.length == 0 && 0}</h3>
+                <div className='flex-2 max-md:flex-0'>
+                    <h3 className='font-bold tracking-wide text-[12px]'>Shunga o'xshagan muammolar:{problems.length == 0 ? 0 : <b>{problems.length - 1}</b>}</h3>
                     {
                         problems.map(problem => {
-                            return (
-                                <Problem info={problem} key={problem?._id} />
-                            )
+                            if (problem._id !== post._id) {
+                                return (
+                                    <Problem info={problem} key={problem?._id} />
+                                )
+                            }
                         })
                     }
                 </div>

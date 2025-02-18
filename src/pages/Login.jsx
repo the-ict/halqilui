@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux"
 import {
     loginStart, loginFailure, loginSuccess
 } from "../redux/userSlice"
+import { ToastContainer, toast } from "react-toastify"
+
+
 
 export default function Login() {
     const [rememberMe, setRememberMe] = useState(false)
@@ -13,10 +16,10 @@ export default function Login() {
 
     const dispatch = useDispatch()
 
-    const {user} = useSelector(store => store.user)
+    const { user } = useSelector(store => store.user)
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             window.location.replace("/")
         }
     }, [])
@@ -36,16 +39,18 @@ export default function Login() {
 
         } catch (error) {
             dispatch(loginFailure())
+            toast("No'to'g'ri malumotlar !")
             console.log(error)
         }
     }
 
 
     return (
-        <div className='flex items-center justify-between'>
-            <div className='px-30 font-inter flex flex-col gap-5'>
-                <h3 className='font-bold text-2xl'>Hisobga kirish</h3>
-                <p className='opacity-60'>Iltimos boshlash uchun malumotlaringizni kiriting!</p>
+        <div className='flex items-center justify-between max-2xl:justify-center max-2xl:h-screen max-2xl:w-screen max-md:px-5'>
+            <ToastContainer />
+            <div className='px-30 max-2xl:px-0 font-inter flex flex-col gap-5'>
+                <h3 className='font-bold text-2xl max-2xl:text-3xl max-md:text-[20px]'>Hisobga kirish</h3>
+                <p className='opacity-60 max-2xl:text-2xl max-md:text-[14px]'>Iltimos boshlash uchun malumotlaringizni kiriting!</p>
                 <input
                     onChange={(e) => setUsername(e.target.value)}
                     type="username" placeholder='Username' className='p-2 rounded outline-blue-400 border-gray-500 border-2' />
@@ -78,7 +83,7 @@ export default function Login() {
                     </p>
                 </div>
             </div>
-            <img className='w-1/2 h-[100vh] object-cover rounded-2xl' src={Bg} alt="background img" />
+            <img className='w-1/2 h-[100vh] object-cover rounded-2xl max-2xl:hidden' src={Bg} alt="background img" />
         </div>
     )
 }

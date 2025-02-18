@@ -1,25 +1,40 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux"
 import axios from "axios"
+import { frameworks } from '../frameworks'
 
 export default function NewPost({ setPost }) {
     const [title, setTitle] = useState("")
-    const [files, setFiles] = useState([])
+    const [file, setFile] = useState([])
     const [desc, setDesc] = useState("")
+    const [categories, setCategories] = useState([])
     const { user } = useSelector(store => store.user)
-
-    useEffect(() => {
-        console.log("files: ", files)
-    }, [files])
 
 
     const handleSubmit = async () => {
         try {
-            const res = await axios.post("/api/problem", {
+            const newPost = {
                 title,
                 description: desc,
-                author_id: user._id
-            })
+                author_id: user?._id
+            }
+
+            if (categories.length > 0) {
+                newPost.category = categories
+                console.log(newPost, "new Post")
+            }
+
+            if (file?.name) {
+                const data = new FormData()
+                const fileName = Date.now() + file?.name
+                data.append("name", fileName)
+                data.append("file", file)
+                const res = await axios.post("/api/images", data)
+                console.log(res.data)
+                newPost.image = fileName
+            }
+            const res = await axios.post("/api/problem", newPost)
+
             if (res.data) window.location.reload()
         } catch (error) {
             console.log(error)
@@ -29,29 +44,84 @@ export default function NewPost({ setPost }) {
     return (
         <div
             className='fixed left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
-            <div className='bg-white shadow p-20 rounded flex flex-col items-center slide-up'>
+            <div className='bg-white shadow p-20 max-sm:p-3 rounded flex flex-col items-center slide-up'>
+
                 <div className='flex gap-10 items-center'>
-                    <h3 className='font-bold text-2xl '>Muammoni rasm bilan ifodalang!</h3>
+                    <h3 className='font-bold text-2xl max-sm:text-[12px]'>Muammoni rasm bilan ifodalang!</h3>
                     <label htmlFor="image">
-                        <i className="fa-regular fa-image cursor-pointer text-2xl"></i>
+                        {
+                            file?.name ? (
+                                <img className='w-[50px] h-[50px] object-cover rounded cursor-pointer' src={URL.createObjectURL(file)} alt="file" />
+                            ) : (
+                                <i className="fa-regular fa-image cursor-pointer text-2xl"></i>
+                            )
+                        }
                     </label>
                     <input
-                        onChange={(e) => setFiles(e.target.files[0])}
+                        onChange={(e) => setFile(e.target.files[0])}
                         type="file" style={{
                             display: "none"
                         }}
                         name='image' id='image' />
 
                 </div>
-                <input onChange={(e) => setTitle(e.target.value)} className='w-full mt-3 border-2 border-blue-300 px-2 py-1 rounded' type="username" placeholder="Postingizga nom bering!" />
-                <textarea onChange={(e) => setDesc(e.target.value)} className='w-full mt-3 border-2 border-blue-300 p-2 h-50' placeholder='Muammo haqida malumot bering'></textarea>
+                <input onChange={(e) => setTitle(e.target.value)} className='w-full max-sm:w-[calc(100vw-30px)] mt-3 border-2 border-blue-300 px-2 py-1 rounded' type="username" placeholder="Postingizga nom bering!" />
+                <textarea onChange={(e) => setDesc(e.target.value)} className='w-full max-sm:w-[calc(100vw-30px)] mt-3 border-2 border-blue-300 p-2 h-50' placeholder='Muammo haqida malumot bering'></textarea>
+
+                <b className='mt-3'>
+                    {
+                        categories.length > 0 ? (
+                            "Frameworkni tanlang !"
+                        ) : (
+                            "Qaysi til bo'yicha?"
+                        )
+                    }
+                </b>
+                <div className='flex gap-4 flex-wrap mt-3 w-[400px] justify-center max-sm:w-[calc(100vw-30px)]'>
+                    {
+                        categories.length > 0 ? (
+                            frameworks[categories[0]].map(item => {
+                                console.log(item)
+                                return (
+                                    <div
+                                        key={item}
+                                        onClick={() => setCategories(prev => [...prev, item])}
+                                        className='text-[10px] bg-gray-200 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
+                                        {categories.includes(item) ? (
+                                            <i className="fa-solid fa-check"></i>
+                                        ) : (
+                                            <i className="fa-solid fa-plus"></i>
+                                        )}
+                                        <p>{item}</p>
+                                    </div>
+                                )
+                            })
+                        ) : (
+                            Object.keys(frameworks).map(item => {
+                                return (
+                                    <div
+                                        key={item}
+                                        onClick={() => setCategories(prev => [...prev, item])}
+                                        className='text-[10px] bg-gray-200 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
+                                        {categories.includes(item) ? (
+                                            <i className="fa-solid fa-check"></i>
+                                        ) : (
+                                            <i className="fa-solid fa-plus"></i>
+                                        )}
+                                        <p>{item}</p>
+                                    </div>
+                                )
+                            })
+                        )
+                    }
+                </div>
                 <div className='flex items-center gap-3 mt-3'>
                     <button
                         onClick={() => setPost(false)}
-                        className='border-2 border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Bekor qilish</button>
+                        className='border-2 max-sm:text-[12px] border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Bekor qilish</button>
                     <button
                         onClick={handleSubmit}
-                        className='border-2 border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Yaratish</button>
+                        className='border-2 max-sm:text-[12px] border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Yaratish</button>
                 </div>
             </div>
         </div>

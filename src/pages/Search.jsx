@@ -10,7 +10,7 @@ export default function Search() {
     const location = useLocation()
     const [language, setLanguage] = useState("Javascript")
     const [searchInput, setSearchInput] = useState(location?.search.split("=")[1])
-    const [frame, setFrame] = useState("React")
+    const [frame, setFrame] = useState("")
     const [searched, setSearched] = useState([])
 
 
@@ -48,44 +48,35 @@ export default function Search() {
     return (
         <div>
             <Navbar />
-            <div className='px-30 flex font-inter gap-4 mt-10 overflow-visible h-screen'>
-                <div className='flex-1 mt-3 sticky top-20 flex h-max flex-col items-center transition justify-between gap-4'>
-                    <p className='w-full font-bold'>Qidirish:</p>
+            <div className='px-30 flex max-sm:flex-col font-inter gap-4 mt-10 overflow-visible h-screen max-md:px-2'>
+                <div className='flex-1 mt-3 sticky max-sm:bg-white top-20 flex h-max flex-col items-center transition justify-between gap-4'>
+                    <p className='w-full font-bold max-md:text-[14px]'>Qidirish:</p>
                     <input
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         type="text" placeholder={location?.search.split("=")[1]} className='w-full h-[40px] px-2 py-1 rounded outline-none border-2 border-solid' />
-                    <p className='w-full font-bold'>Tilni tanlang:</p>
+                    <p className='w-full font-bold max-md:text-[14px]'>Tilni tanlang:</p>
                     <select onChange={(e) => {
                         setLanguage(e.target.value)
-                    }} className='w-full px-2 py-1 rounded border-2 border-black border-solid'>
-                        <option value="Javascript">JavaScript</option>
-                        <option value="Python">Python</option>
-                        <option value="Java">Java</option>
-                        <option value="C++">C++</option>
-                        <option value="C#">C#</option>
-                        <option value="PHP">PHP</option>
-                        <option value="Swift">Swift</option>
-                        <option value="Go">Go</option>
-                        <option value="Kotlin">Kotlin</option>
-                        <option value="Rust">Rust</option>
-                        <option value="Ruby">Ruby</option>
-                        <option value="TypeScript">TypeScript</option>
-                        <option value="Dart">Dart</option>
-                        <option value="Scala">Scala</option>
-                        <option value="Perl">Perl</option>
-                        <option value="Lua">Lua</option>
-                        <option value="Haskell">Haskell</option>
-                        <option value="Objective-C">Objective-C</option>
+                    }}
+
+                        className='w-full px-2 py-1 rounded border-2 border-black border-solid max-md:text-[14px]'>
+                        {
+                            Object.keys(frameworks).map(item => {
+                                return (
+                                    <option value={item} key={item} selected={searched[0]?.category?.includes(item)}>{item}</option>
+                                )
+                            })
+                        }
                     </select>
-                    <p className='w-full font-bold'>Frameworkni tanlang:</p>
+                    <p className='w-full font-bold max-md:text-[14px]'>Frameworkni tanlang:</p>
 
                     <select onChange={(e) => {
                         setFrame(e.target.value)
-                    }} id="framework" className='w-full px-2 py-1 rounded border-2 border-black border-solid'>
+                    }} id="framework" className='w-full px-2 py-1 max-md:text-[14px] rounded border-2 border-black border-solid'>
                         {
-                            frameworks[Object.keys(frameworks).filter(item => item.toLowerCase().trim() === language.toLowerCase().trim()).toString()].map(item => (
-                                <option value={item} key={item}>{item}</option>
+                            frameworks[Object.keys(frameworks).filter(item => item.trim().toLowerCase() === language.trim().toLowerCase())].map(item => (
+                                <option value={item} key={item} selected={searched[0]?.category?.includes(item)}>{item}</option>
                             ))
                         }
                     </select>

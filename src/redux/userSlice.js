@@ -21,11 +21,14 @@ export const userSlice = createSlice({
         loginFailure: (state) => {
             state.loading = false;
             state.error = true
+        },
+        logout: () => {
+            return initialState;
         }
     }
 })
 
 
-export const { loginStart, loginFailure, loginSuccess } = userSlice.actions
+export const { loginStart, loginFailure, loginSuccess, logout } = userSlice.actions
 
 export default userSlice.reducer

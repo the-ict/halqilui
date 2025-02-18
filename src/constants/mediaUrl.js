@@ -1,0 +1,1 @@
+export const mediaPath = "http://localhost:8800/images"

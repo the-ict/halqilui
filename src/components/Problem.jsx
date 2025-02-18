@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { mediaPath } from "../constants/mediaUrl"
 
 export default function Problem({ info }) {
     const [userPic, setUserPic] = useState("")
@@ -24,14 +25,14 @@ export default function Problem({ info }) {
             <div className='flex items-center gap-3'>
                 {
                     userPic ? (
-                        <img className='w-[50px] h-[50px] rounded-full object-cover cursor-pointer' src="https://static.vecteezy.com/system/resources/thumbnails/007/209/020/small_2x/close-up-shot-of-happy-dark-skinned-afro-american-woman-laughs-positively-being-in-good-mood-dressed-in-black-casual-clothes-isolated-on-grey-background-human-emotions-and-feeligs-concept-photo.jpg" alt="" />
+                        <img className='w-[50px] h-[50px] rounded-full object-cover cursor-pointer' src={mediaPath + "/" + userPic} alt="" />
                     ) : (
                         <i className="cursor-pointer fa-solid fa-user"></i>
                     )
                 }
                 <div>
-                    <h3 className='uppercase'>{info?.title}</h3>
-                    <p className='w-full overflow-hidden'>{info?.description}</p>
+                    <h3 className='uppercase max-2xl:text-[12px] line-clamp-2'>{info?.title}</h3>
+                    <p className='w-full overflow-hidde line-clamp-1 max-2xl:text-[12px]'>{info?.description}</p>
                 </div>
             </div>
             <button className='cursor-pointer bg-[#E57676] hover:bg-red-500 transition px-2 py-1 rounded text-white outline-none'>Ko'proq</button>
