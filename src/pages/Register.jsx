@@ -31,7 +31,9 @@ export default function Register() {
                 email
             }, { withCredentials: true })
             dispatch(loginSuccess(res.data))
-            // if (res.data) window.location.replace("/")
+            
+            toast("Ro'yhatdan o'tdingiz!")
+            if (res.data) window.location.replace("/")
         } catch (error) {
             dispatch(loginFailure())
             toast("No'to'g'ri malumotlar!")

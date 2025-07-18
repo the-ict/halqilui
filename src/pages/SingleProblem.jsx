@@ -16,7 +16,6 @@ export default function SingleProblem() {
     const [problems, setProblems] = useState([])
     const [showEmoji, setShowEmoji] = useState(false)
     const [comment, setComment] = useState("")
-    const [imgWrapper, setImgWrapper] = useState(false)
 
     const { user } = useSelector(store => store.user)
 
@@ -113,18 +112,15 @@ export default function SingleProblem() {
                 <div className='p-2 rounded mb-3 h-min[calc(100vh-62px)] flex-3 max-md:flex-0 '>
                     <h3 className='font-bold tracking-wider'>{post.title}</h3>
                     <p><a href="/" className='text-blue-500 underline'>{username}</a> tomonidan yaratilgan <b>{post?.views}</b> martda ko'rilgan</p>
-                    <div className='flex items-center mt-3 gap-3 flex-wrap'>
-                        {
-                            post?.image && (
-                                <img onClick={() => { setImgWrapper(!imgWrapper) }} className={`w-full h-[500px] object-contain cursor-pointer transition-all ${imgWrapper && "fixed w-screen h-screen bg-black left-0 top-0 z-50"}`} src={mediaPath + "/" + post?.image} alt='image' />
-                            )
-                        }
+                    <div className='flex items-center mt-3 gap-3 flex-wrap h-[500px]'>
+                        {/* Image Slider Start */}
+                        <ImageSlider images={post?.image} />
+                        {/* Image Slider End */}
                     </div>
-                    <p className='text-gray-700 tracking-wider bg-gray-100 mt-4 p-2 rounded'>
-                        {
-                            post.description
-                        }
-                    </p>
+                    <p
+                        className="mt-10 p-5 bg-[#27282D] text-white"
+                        dangerouslySetInnerHTML={{ __html: post.description }}
+                    />
                     <h1 className='mt-3'>Izohlar: {comments.length == 0 && 0}</h1>
                     <div className='flex items-center gap-3 mt-3'>{
                         post?.category && (
@@ -208,4 +204,65 @@ export default function SingleProblem() {
             </div>
         </div>
     )
+
+    // Slider component (add this inside the same file, above the export default)
+    function ImageSlider({ images }) {
+        const slides = [
+            { color: "#FF6B6B" },
+            { color: "#FFD93D" },
+            { color: "#6BCB77" },
+            { color: "#4D96FF" },
+            { color: "#A66CFF" }
+        ];
+        const [current, setCurrent] = useState(0);
+
+        const nextSlide = () => setCurrent((prev) => (prev + 1) % images.length);
+        const prevSlide = () => setCurrent((prev) => (prev - 1 + images.length) % images.length);
+
+        return (
+            <div className="relative w-full h-full overflow-hidden rounded-xl shadow-lg">
+                <div
+                    className="flex transition-transform duration-700 ease-in-out h-full"
+                    style={{ transform: `translateX(-${current * 100}%)` }}
+                >
+                    {Array.isArray(images) && images.length > 0 && (
+                        images.map((slide, idx) => (
+                            <img
+                                key={idx}
+                                className="w-full h-full object-contain flex-shrink-0 flex items-center justify-center text-3xl font-bold"
+                                src={mediaPath + "/" + (images && images[idx])}
+                                style={{
+                                    background: slide.color,
+                                    color: "#fff",
+                                    transition: "background 0.5s"
+                                }}
+                            />
+                        ))
+                    )}
+                </div>
+                <button
+                    className="absolute top-1/2 left-2 cursor-pointer -translate-y-1/2 bg-white/70 hover:bg-white text-black rounded-full w-8 h-8 flex items-center justify-center shadow transition"
+                    onClick={prevSlide}
+                    aria-label="Previous"
+                >
+                    <i className="fa-solid fa-chevron-left"></i>
+                </button>
+                <button
+                    className="absolute top-1/2 right-2 cursor-pointer -translate-y-1/2 bg-white/70 hover:bg-white text-black rounded-full w-8 h-8 flex items-center justify-center shadow transition"
+                    onClick={nextSlide}
+                    aria-label="Next"
+                >
+                    <i className="fa-solid fa-chevron-right"></i>
+                </button>
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+                    {Array.isArray(images) && images.map((_, idx) => (
+                        <span
+                            key={idx}
+                            className={`w-2 h-2 rounded-full ${current === idx ? 'bg-white' : 'bg-white/50'} transition`}
+                        />
+                    ))}
+                </div>
+            </div>
+        );
+    }
 }

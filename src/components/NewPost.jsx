@@ -2,21 +2,37 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux"
 import axios from "axios"
 import { frameworks } from '../frameworks'
+import Description from "../components/Description"
+
 
 export default function NewPost({ setPost }) {
     const [title, setTitle] = useState("")
-    const [file, setFile] = useState([])
+    const [files, setFiles] = useState([])
     const [desc, setDesc] = useState("")
     const [categories, setCategories] = useState([])
     const { user } = useSelector(store => store.user)
 
+    const handleFileUpload = async(file) => {
+        const filename = file.name
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await axios.post("http://localhost:5000/api/images", formData, { withCredentials: true });
+            console.log("File uploaded successfully:", res);
+            return filename;
+        } catch (err) {
+            console.error("File upload error:", err);
+            return null;
+        }
+    }
 
     const handleSubmit = async () => {
         try {
             const newPost = {
                 title,
                 description: desc,
-                author_id: user.user._id
+                author_id: user.user._id,
             }
 
             if (categories.length > 0) {
@@ -24,14 +40,16 @@ export default function NewPost({ setPost }) {
                 console.log(newPost, "new Post")
             }
 
-            if (file?.name) {
-                const data = new FormData()
-                const fileName = Date.now() + file?.name
-                data.append("name", fileName)
-                data.append("file", file)
-                const res = await axios.post("http://localhost:5000/api/images", data)
-                console.log(res.data)
-                newPost.image = fileName
+            if (files.length > 0) {
+                newPost.image = [];
+                for (let i = 0; i < files.length; i++) {
+                    const filename = await handleFileUpload(files[i]);
+                    if (filename) {
+                        newPost.image.push(filename);
+                    } else {
+                        console.error("Failed to upload file:", files[i].name);
+                    }
+                }
             }
             const res = await axios.post("http://localhost:5000/api/problem", newPost)
 
@@ -46,27 +64,35 @@ export default function NewPost({ setPost }) {
             className='fixed left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
             <div className='bg-black/80 text-white border-[2px] shadow p-20 max-sm:p-3 rounded flex flex-col items-center slide-up'>
 
-                <div className='flex gap-10 items-center'>
-                    <h3 className='font-bold text-2xl max-sm:text-[12px]'>Muammoni rasm bilan ifodalang!</h3>
+                <h3 className='font-bold text-2xl max-sm:text-[12px]'>Muammoni rasm bilan ifodalang!</h3>
+                <div className='mt-4 mb-2 flex items-center gap-3'>
+                    <h1>Rasmlar qo'shing</h1>
                     <label htmlFor="image">
-                        {
-                            file?.name ? (
-                                <img className='w-[50px] h-[50px] object-cover rounded cursor-pointer' src={URL.createObjectURL(file)} alt="file" />
-                            ) : (
-                                <i className="fa-regular fa-image cursor-pointer text-2xl"></i>
-                            )
-                        }
+                        <i className='fa-solid fa-plus cursor-pointer'></i>
                     </label>
                     <input
-                        onChange={(e) => setFile(e.target.files[0])}
+                        onChange={e => setFiles(Array.from(e.target.files))}
                         type="file" style={{
                             display: "none"
                         }}
+                        multiple
                         name='image' id='image' />
-
                 </div>
+
+{/* images */}
+                <div className='flex gap-3 flex-wrap'>
+                    {
+                        files.length > 0 && (
+                            files.map((file, index) => (
+                                <img className='w-[100px] h-[100px] object-contain cursor-pointer' key={index} src={URL.createObjectURL(file)} alt="" />
+                            ))
+                        )
+                    }
+                </div>
+
                 <input onChange={(e) => setTitle(e.target.value)} className='w-full max-sm:w-[calc(100vw-30px)] mt-3 border-2 border-blue-300 px-2 py-1 rounded' type="username" placeholder="Postingizga nom bering!" />
-                <textarea onChange={(e) => setDesc(e.target.value)} className='w-full max-sm:w-[calc(100vw-30px)] mt-3 border-2 border-blue-300 p-2 h-50' placeholder='Muammo haqida malumot bering'></textarea>
+                <Description onChange={(html) => setDesc(html) } />
+                {/* <textarea onChange={(e) => setDesc(e.target.value)} className='w-full max-sm:w-[calc(100vw-30px)] mt-3 border-2 border-blue-300 p-2 h-50' placeholder='Muammo haqida malumot bering'></textarea> */}
 
                 <b className='mt-3'>
                     {

@@ -48,7 +48,13 @@ export default function Navbar() {
                     user ? (
                         <>
                             <Link to={`/`}>
-                                <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                {
+                                    user.profile_pic ? (
+                                        <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                    ) : (
+                                        <i onClick={() => setShowProfile(true)} className="fa-solid fa-user text-[20px] cursor-pointer"></i>
+                                    )
+                                }
                             </Link>
                             <button onClick={() => setShowNew(true)} className='text-gray-400 hover:text-white cursor-pointer'>
                                 <i className="fa-solid fa-plus text-[20px]"></i>
