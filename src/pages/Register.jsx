@@ -29,9 +29,9 @@ export default function Register() {
                 username,
                 password,
                 email
-            })
+            }, { withCredentials: true })
             dispatch(loginSuccess(res.data))
-            if (res.data) window.location.replace("/")
+            // if (res.data) window.location.replace("/")
         } catch (error) {
             dispatch(loginFailure())
             toast("No'to'g'ri malumotlar!")

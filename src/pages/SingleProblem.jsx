@@ -89,7 +89,7 @@ export default function SingleProblem() {
         try {
             const res = await axios.post("http://localhost:5000/api/comment", {
                 post_id: post?._id,
-                user_id: user.user._id,
+                user_id: user._id,
                 user_message: comment,
             })
 

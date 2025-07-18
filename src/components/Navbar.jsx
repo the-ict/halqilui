@@ -52,7 +52,7 @@ export default function Navbar() {
                     user ? (
                         <>
                             <Link to={`/`}>
-                                <img onClick={() => setShowProfile(true)} src={`https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg`} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
                             </Link>
                             <button onClick={() => setShowNew(true)} className='text-gray-400 hover:text-white cursor-pointer'>
                                 <i className="fa-solid fa-plus text-[20px]"></i>

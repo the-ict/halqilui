@@ -31,7 +31,7 @@ export default function Login() {
             const res = await axios.post("/api/auth/signin", {
                 username,
                 password
-            })
+            }, { withCredentials: true })
             dispatch(loginSuccess(res.data))
             if (res.data) {
                 window.location.replace("/")

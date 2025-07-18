@@ -145,18 +145,18 @@ export default function Comment({ info }) {
                         }
                         {
                             showMenu && (
-                                <div className={`absolute right-0 bottom-[-80px] z-20 bg-gray-100 p-3 rounded`}>
+                                <div className={`absolute right-0 bottom-[-80px] z-20 p-3 rounded bg-black/80 text-white flex flex-col gap-2 shadow-lg`}>
                                     <div onClick={() => {
                                         setEditState(true)
                                         setShowMenu(false)
-                                    }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
+                                    }} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
                                         <span>O'zgartirish</span>
                                         <i className="fa-regular fa-pen-to-square"></i>
                                     </div>
                                     <div onClick={() => {
                                         setConfirm(!confirm)
                                         setShowMenu(false)
-                                    }} className='px-2 py-1 rounded hover:bg-gray-200 cursor-pointer transition flex items-center justify-between gap-3'>
+                                    }} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
                                         <span>O'chirish</span>
                                         <i className="fa-solid fa-trash-can-arrow-up"></i>
                                     </div>

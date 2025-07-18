@@ -23,7 +23,7 @@ export default function Profile({ setProfile }) {
       if (password === confirmPassword) {
         const updateUser = {
           username: username.length > 0 ? username : user?.username,
-          user_id: user._id
+          user_id: user.user._id
         }
 
         if (password.length > 0) {
@@ -84,7 +84,7 @@ export default function Profile({ setProfile }) {
           }} />
         </div>
         <p className='w-full mt-3 font-normal' >Usernameni kiriting:</p>
-        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username"/>
+        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username"/>
         <p className='w-full mt-3 font-normal'>Eski parolni kiriting:</p>
         <input onChange={(e) => setOldPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder='*****'  />
         <p className='w-full mt-3 font-normal'>Parolni kiriting:</p>
