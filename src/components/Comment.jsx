@@ -21,7 +21,7 @@ export default function Comment({ info }) {
         const findUser = async () => {
             try {
                 if (info?.user_id) {
-                    const res = await axios.get(`/api/user/${info?.user_id}`)
+                    const res = await axios.get(`http://localhost:5000/api/user/${info?.user_id}`)
                     setAuthor(res.data)
                 }
             } catch (error) {
@@ -35,7 +35,7 @@ export default function Comment({ info }) {
     const handleDelete = async (media_id, setConfirm) => {
         try {
             console.log("media_id: ", media_id)
-            const res = await axios.delete(`/api/comment/${media_id}?user_id=${user._id}`, {
+            const res = await axios.delete(`http://localhost:5000/api/comment/${media_id}?user_id=${user._id}`, {
                 withCredentials: true
             })
             setConfirm(false)
@@ -50,7 +50,7 @@ export default function Comment({ info }) {
 
     const handleEdit = async () => {
         try {
-            const res = await axios.put(`/api/comment/${info?._id}`, {
+            const res = await axios.put(`http://localhost:5000/api/comment/${info?._id}`, {
                 comment_author: user._id,
                 user_message: editInput
             }, {
@@ -67,7 +67,7 @@ export default function Comment({ info }) {
 
     const handleLike = async () => {
         try {
-            const res = await axios.put(`/api/comment/like/${info?._id}/${user?._id}`)
+            const res = await axios.put(`http://localhost:5000/api/comment/like/${info?._id}/${user?._id}`)
             console.log(res.data)
             if (res.data) window.location.reload()
         } catch (error) {
@@ -77,7 +77,7 @@ export default function Comment({ info }) {
 
     const handleDislike = async () => {
         try {
-            const res = await axios.put(`/api/comment/unlike/${info?._id}/${user?._id}`)
+            const res = await axios.put(`http://localhost:5000/api/comment/unlike/${info?._id}/${user?._id}`)
             if (res.data) window.location.reload()
             console.log(res.data)
         } catch (error) {

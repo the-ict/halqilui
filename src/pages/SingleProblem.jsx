@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
-import Newsletter from '../components/Newsletter'
 import Problem from '../components/Problem'
 import Comment from '../components/Comment'
 import EmojiPicker from "emoji-picker-react"
@@ -27,7 +26,7 @@ export default function SingleProblem() {
     const getComments = async () => {
         try {
             if (location?.pathname) {
-                const res = await axios.get(`/api/comment/find/${location?.pathname.split('/')[2]}`)
+                const res = await axios.get(`http://localhost:5000/api/comment/find/${location?.pathname.split('/')[2]}`)
                 setComments(res.data.reverse())
             }
         } catch (error) {
@@ -39,7 +38,7 @@ export default function SingleProblem() {
         const singlePost = async () => {
             try {
                 if (location?.pathname) {
-                    const res = await axios.put(`/api/problem/view/${location.pathname.split("/")[2]}`)
+                    const res = await axios.put(`http://localhost:5000/api/problem/view/${location.pathname.split("/")[2]}`)
                     setPost(res.data)
                     console.log(res.data, "post")
                 }
@@ -61,7 +60,7 @@ export default function SingleProblem() {
             try {
                 if (post?.author_id) {
                     console.log("bor")
-                    const res = await axios.get(`/api/user/${post?.author_id}`)
+                    const res = await axios.get(`http://localhost:5000/api/user/${post?.author_id}`)
                     console.log("author id: ", res.data)
                     setUsername(res.data.username)
                 }
@@ -72,7 +71,7 @@ export default function SingleProblem() {
         findUser()
         const getProblems = async () => {
             try {
-                const res = await axios.get(`/api/problem/?category=${post?.category.toString()}`);
+                const res = await axios.get(`http://localhost:5000/api/problem/?category=${post?.category.toString()}`);
                 setProblems(res.data)
             } catch (error) {
                 console.log("problems error:", error)
@@ -82,12 +81,15 @@ export default function SingleProblem() {
 
     }, [post])
 
+    useEffect(() => {
+        console.log(post, "post in useEffect")
+    }, [post])
 
     const handleComment = async () => {
         try {
-            const res = await axios.post("/api/comment", {
+            const res = await axios.post("http://localhost:5000/api/comment", {
                 post_id: post?._id,
-                user_id: user?._id,
+                user_id: user.user._id,
                 user_message: comment,
             })
 
@@ -109,16 +111,16 @@ export default function SingleProblem() {
             <Navbar />
             <div className='flex max-md:flex-col max-md:gap-0 mx-30 gap-10 font-inter mt-3 min-h-screen max-lg:mx-2'>
                 <div className='p-2 rounded mb-3 h-min[calc(100vh-62px)] flex-3 max-md:flex-0 '>
-                    <h3 className='font-bold tracking-wider '>{post.title}</h3>
+                    <h3 className='font-bold tracking-wider'>{post.title}</h3>
                     <p><a href="/" className='text-blue-500 underline'>{username}</a> tomonidan yaratilgan <b>{post?.views}</b> martda ko'rilgan</p>
                     <div className='flex items-center mt-3 gap-3 flex-wrap'>
                         {
                             post?.image && (
-                                <img onClick={() => { setImgWrapper(!imgWrapper) }} className={`w-full h-[200px] object-cover cursor-pointer transition-all ${imgWrapper && "fixed w-screen h-screen left-0 top-0 z-50"}`} src={mediaPath + "/" + post?.image} alt='image' />
+                                <img onClick={() => { setImgWrapper(!imgWrapper) }} className={`w-full h-[500px] object-contain cursor-pointer transition-all ${imgWrapper && "fixed w-screen h-screen bg-black left-0 top-0 z-50"}`} src={mediaPath + "/" + post?.image} alt='image' />
                             )
                         }
                     </div>
-                    <p className='text-gray-700 tracking-wider bg-red-200 mt-4 p-2 rounded'>
+                    <p className='text-gray-700 tracking-wider bg-gray-100 mt-4 p-2 rounded'>
                         {
                             post.description
                         }
@@ -130,7 +132,7 @@ export default function SingleProblem() {
                                 return (
                                     <div
                                         key={item}
-                                        className='text-[10px] bg-gray-200 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
+                                        className='text-[13px] bg-gray-200 text-black px-3 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
                                         <i className="fa-solid fa-check"></i>
                                         <p>{item}</p>
                                     </div>
@@ -204,7 +206,6 @@ export default function SingleProblem() {
                     }
                 </div>
             </div>
-            <Newsletter />
         </div>
     )
 }

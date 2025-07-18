@@ -19,21 +19,6 @@ export default function Profile({ setProfile }) {
 
 
   const handleSubmit = async () => {
-    if (!password) {
-      toast("Hech narsa o'zgartirmadingiz!")
-      return
-    }
-
-    if (!oldPassword) {
-      toast("Eski parolni kiriting!")
-      return
-    }
-    
-    if (oldPassword !== user.password) {
-      toast("Eski parol noto'g'ri!")  
-      return
-    }
-
     try {
       if (password === confirmPassword) {
         const updateUser = {
@@ -51,12 +36,12 @@ export default function Profile({ setProfile }) {
           data.append("name", fileName)
           data.append("file", file)
 
-          const res = await axios.post("/api/images", data)
+          const res = await axios.post("http://localhost:5000/api/images", data, { withCredentials: true })
           console.log(res.data, "profile response")
           updateUser.profile_pic = fileName
         }
 
-        const res = await axios.put(`/api/user/${user?._id}`, updateUser, {
+        const res = await axios.put(`http://localhost:5000/api/user/${user.user._id}`, updateUser, {
           withCredentials: true
         })
 

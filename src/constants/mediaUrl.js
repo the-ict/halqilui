@@ -1,1 +1,1 @@
-export const mediaPath = "http://localhost:8800/images"
+export const mediaPath = "http://localhost:5000/images"
