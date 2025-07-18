@@ -13,10 +13,6 @@ export default function Navbar() {
     const { user } = useSelector(store => store.user)
     const dispatch = useDispatch()
 
-
-
-    console.log("user information:", user)
-
     const handleNavigate = (e) => {
         e.preventDefault();
         if (search) {
@@ -28,7 +24,7 @@ export default function Navbar() {
 
     return (
         <div className='flex items-center justify-between p-4 w-full bg-black text-white'>
-            <Link to="/">
+            <Link to="/" className='pl-5'>
                 <h1>Halqil</h1>
             </Link>
 
