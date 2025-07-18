@@ -16,7 +16,7 @@ export default function NewPost({ setPost }) {
             const newPost = {
                 title,
                 description: desc,
-                author_id: user?._id
+                author_id: user.user._id
             }
 
             if (categories.length > 0) {
@@ -29,11 +29,11 @@ export default function NewPost({ setPost }) {
                 const fileName = Date.now() + file?.name
                 data.append("name", fileName)
                 data.append("file", file)
-                const res = await axios.post("/api/images", data)
+                const res = await axios.post("http://localhost:5000/api/images", data)
                 console.log(res.data)
                 newPost.image = fileName
             }
-            const res = await axios.post("/api/problem", newPost)
+            const res = await axios.post("http://localhost:5000/api/problem", newPost)
 
             if (res.data) window.location.reload()
         } catch (error) {
@@ -44,7 +44,7 @@ export default function NewPost({ setPost }) {
     return (
         <div
             className='fixed left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
-            <div className='bg-white shadow p-20 max-sm:p-3 rounded flex flex-col items-center slide-up'>
+            <div className='bg-black/80 text-white border-[2px] shadow p-20 max-sm:p-3 rounded flex flex-col items-center slide-up'>
 
                 <div className='flex gap-10 items-center'>
                     <h3 className='font-bold text-2xl max-sm:text-[12px]'>Muammoni rasm bilan ifodalang!</h3>
@@ -86,7 +86,7 @@ export default function NewPost({ setPost }) {
                                     <div
                                         key={item}
                                         onClick={() => setCategories(prev => [...prev, item])}
-                                        className='text-[10px] bg-gray-200 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
+                                        className='text-[13px] bg-gray-500 text-white cursor-pointer w-[100]px flex gap-3 items-center p-1 px-2 rounded'>
                                         {categories.includes(item) ? (
                                             <i className="fa-solid fa-check"></i>
                                         ) : (
@@ -102,7 +102,7 @@ export default function NewPost({ setPost }) {
                                     <div
                                         key={item}
                                         onClick={() => setCategories(prev => [...prev, item])}
-                                        className='text-[10px] bg-gray-200 cursor-pointer w-[100]px flex gap-3 items-center p-1 rounded'>
+                                        className='text-[13px] bg-gray-500 text-white cursor-pointer w-[100]px flex gap-3 items-center p-1 px-2 rounded'>
                                         {categories.includes(item) ? (
                                             <i className="fa-solid fa-check"></i>
                                         ) : (
@@ -118,10 +118,10 @@ export default function NewPost({ setPost }) {
                 <div className='flex items-center gap-3 mt-3'>
                     <button
                         onClick={() => setPost(false)}
-                        className='border-2 max-sm:text-[12px] border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Bekor qilish</button>
+                        className='cursor-pointer px-3 py-2 bg-red-500 rounded'>Bekor qilish</button>
                     <button
                         onClick={handleSubmit}
-                        className='border-2 max-sm:text-[12px] border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Yaratish</button>
+                        className='cursor-pointer px-3 py-2 bg-blue-500 rounded'>Yaratish</button>
                 </div>
             </div>
         </div>

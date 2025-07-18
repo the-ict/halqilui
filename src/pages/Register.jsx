@@ -25,7 +25,7 @@ export default function Register() {
     const handleRegister = async () => {
         dispatch(loginStart())
         try {
-            const res = await axios.post("/api/auth/signup", {
+            const res = await axios.post("http://localhost:5000/api/auth/signup", {
                 username,
                 password,
                 email

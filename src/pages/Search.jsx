@@ -17,7 +17,7 @@ export default function Search() {
     const getSearchedProblems = async () => {
         try {
             if (location?.search) {
-                const res = await axios.get(`/api/problem/?search=${location.search.split("=")[1]}`)
+                const res = await axios.get(`http://localhost:5000/api/problem/?search=${location.search.split("=")[1]}`)
                 console.log(res.data)
                 setSearched(res.data)
             }
@@ -33,7 +33,7 @@ export default function Search() {
     const handleFilter = async () => {
         try {
             if (location?.search) {
-                const res = await axios.get(`/api/problem/?search=${searchInput}&category=${language},${frame}`);
+                const res = await axios.get(`http://localhost:5000/api/problem/?search=${searchInput}&category=${language},${frame}`);
                 console.log(res.data, "filter")
                 setSearched(res.data)
             }
@@ -43,13 +43,11 @@ export default function Search() {
     }
 
 
-
-
     return (
         <div>
             <Navbar />
             <div className='px-30 flex max-sm:flex-col font-inter gap-4 mt-10 overflow-visible h-screen max-md:px-2'>
-                <div className='flex-1 mt-3 sticky max-sm:bg-white top-20 flex h-max flex-col items-center transition justify-between gap-4'>
+                <div className='flex-1 mt-3 sticky bg-[#111] border-[1px] rounded-lg p-5 max-sm:bg-white top-20 flex h-max flex-col items-center transition justify-between gap-4'>
                     <p className='w-full font-bold max-md:text-[14px]'>Qidirish:</p>
                     <input
                         value={searchInput}
@@ -96,8 +94,6 @@ export default function Search() {
                     }
                 </div>
             </div>
-            {/* <NewPost /> */}
-            <Newsletter />
         </div >
     )
 }

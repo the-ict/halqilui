@@ -1,6 +1,6 @@
 export default function ContentItem() {
     return (
-        <div className="w-full">
+        <div className="w-full cursor-pointer">
             <div className="flex justify-between items-center mb-4 border-b border-gray-600 pb-4">
                 <div className="flex items-center">
                     <img className="w-[50px] h-[50px] rounded-full object-cover cursor-pointer" src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" alt="user image" />

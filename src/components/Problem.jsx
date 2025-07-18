@@ -21,7 +21,7 @@ export default function Problem({ info }) {
     return (
         <div
             onClick={() => window.location.replace(`/single/${info?._id}`)}
-            className='w-full bg-indigo-100 rounded px-5 py-3 flex items-center justify-between hover:shadow-2xl transition hover:scale-101 mt-3 mb-3 cursor-pointer'>
+            className='w-full bg-[#333] rounded px-5 py-3 flex items-center justify-between hover:shadow-2xl transition hover:scale-101 mt-3 mb-3 cursor-pointer'>
             <div className='flex items-center gap-3'>
                 {
                     userPic ? (

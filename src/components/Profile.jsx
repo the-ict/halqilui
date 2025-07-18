@@ -11,11 +11,29 @@ export default function Profile({ setProfile }) {
   const [password, setPassword] = useState("")
   const [file, setFile] = useState([])
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [oldPassword, setOldPassword] = useState("")
+
 
   const { user } = useSelector(store => store.user)
   const dispatch = useDispatch()
 
+
   const handleSubmit = async () => {
+    if (!password) {
+      toast("Hech narsa o'zgartirmadingiz!")
+      return
+    }
+
+    if (!oldPassword) {
+      toast("Eski parolni kiriting!")
+      return
+    }
+    
+    if (oldPassword !== user.password) {
+      toast("Eski parol noto'g'ri!")  
+      return
+    }
+
     try {
       if (password === confirmPassword) {
         const updateUser = {
@@ -42,7 +60,7 @@ export default function Profile({ setProfile }) {
           withCredentials: true
         })
 
-        if(res.data) {
+        if (res.data) {
           dispatch(loginSuccess(res.data))
           window.location.reload()
         }
@@ -59,7 +77,7 @@ export default function Profile({ setProfile }) {
   return (
     <div
       className='fixed left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
-      <div className='bg-white shadow p-20 rounded flex flex-col items-center slide-up'>
+      <div className='bg-black/80 text-white border-[2px] rounded shadow p-20 flex flex-col items-center slide-up'>
         <ToastContainer />
 
         <div className='flex gap-10 items-center'>
@@ -80,19 +98,21 @@ export default function Profile({ setProfile }) {
             display: "none"
           }} />
         </div>
-        <p className='w-full mt-3 font-normal'>Usernameni kiriting:</p>
-        <input onChange={(e) => setUsername(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username" placeholder={user?.username} />
+        <p className='w-full mt-3 font-normal' >Usernameni kiriting:</p>
+        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username"/>
+        <p className='w-full mt-3 font-normal'>Eski parolni kiriting:</p>
+        <input onChange={(e) => setOldPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder='*****'  />
         <p className='w-full mt-3 font-normal'>Parolni kiriting:</p>
         <input onChange={(e) => setPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder="password" />
         <p className='w-full mt-3 font-normal'>Parolni qayta kiriting:</p>
         <input onChange={e => setConfirmPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder="confirm password" />
-        <div className='flex items-center gap-3 mt-3'>
+        <div className='flex items-center gap-3 mt-5'>
           <button
-            onClick={() => setProfile(false)}
-            className='border-2 max-sm:text-[12px] border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Bekor qilish</button>
+          onClick={() => setProfile(false)}
+            className='cursor-pointer px-3 py-2 bg-red-500 rounded'>Bekor qilish</button>
           <button
             onClick={handleSubmit}
-            className='border-2 max-sm:text-[12px] border-[#FF7008] text-[#FF7008] px-3 py-1 cursor-pointer hover:bg-[#FF7008] hover:text-white transition-[2s]'>Saqlash</button>
+            className='cursor-pointer px-3 py-2 bg-blue-500 rounded'>O'zgartirish</button>
         </div>
       </div>
     </div >
