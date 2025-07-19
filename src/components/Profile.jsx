@@ -61,7 +61,7 @@ export default function Profile({ setProfile }) {
 
   return (
     <div
-      className='fixed left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
+      className='fixed left-0 z-10 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
       <div className='bg-black/80 text-white border-[2px] rounded shadow p-20 flex flex-col items-center slide-up'>
         <ToastContainer />
 
@@ -84,7 +84,7 @@ export default function Profile({ setProfile }) {
           }} />
         </div>
         <p className='w-full mt-3 font-normal' >Usernameni kiriting:</p>
-        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username"/>
+        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username"/>
         <p className='w-full mt-3 font-normal'>Eski parolni kiriting:</p>
         <input onChange={(e) => setOldPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder='*****'  />
         <p className='w-full mt-3 font-normal'>Parolni kiriting:</p>

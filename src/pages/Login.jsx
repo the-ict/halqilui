@@ -28,7 +28,7 @@ export default function Login() {
     const handleLogin = async () => {
         dispatch(loginStart())
         try {
-            const res = await axios.post("/api/auth/signin", {
+            const res = await axios.post("http://localhost:5000/api/auth/signin", {
                 username,
                 password
             }, { withCredentials: true })

@@ -29,10 +29,12 @@ export default function NewPost({ setPost }) {
 
     const handleSubmit = async () => {
         try {
+
+            console.log(user, "user in newpost")
             const newPost = {
                 title,
                 description: desc,
-                author_id: user.user._id,
+                author_id: user._id,
             }
 
             if (categories.length > 0) {
@@ -61,7 +63,7 @@ export default function NewPost({ setPost }) {
 
     return (
         <div
-            className='fixed left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
+            className='fixed z-10 left-0 top-0 bg-[rgba(0,0,0,0.5)] h-screen w-screen flex items-center justify-center font-inter'>
             <div className='bg-black/80 text-white border-[2px] shadow p-20 max-sm:p-3 rounded flex flex-col items-center slide-up'>
 
                 <h3 className='font-bold text-2xl max-sm:text-[12px]'>Muammoni rasm bilan ifodalang!</h3>

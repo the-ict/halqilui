@@ -59,7 +59,10 @@ export default function Navbar() {
                             <button onClick={() => setShowNew(true)} className='text-gray-400 hover:text-white cursor-pointer'>
                                 <i className="fa-solid fa-plus text-[20px]"></i>
                             </button>
-                            <button onClick={() => dispatch(logout())} className='text-gray-400 hover:text-white cursor-pointer'>
+                            <button onClick={() =>{
+                                 dispatch(logout())
+                                 window.location.href = "/login"
+                            }} className='text-gray-400 hover:text-white cursor-pointer'>
                                 <i className="fa-solid fa-right-from-bracket text-[20px]"></i>
                             </button>
                         </>

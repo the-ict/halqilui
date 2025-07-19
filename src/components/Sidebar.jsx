@@ -69,22 +69,24 @@ export default function Sidebar() {
                 </div>
                 <Collapse open={openSections.main}>
                     <div>
-                        <div className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
+                        <Link
+                            to={"/"}
+                            className={`flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer ${
+                                window.location.pathname === "/" ? "bg-white/20" : ""
+                            }`}
+                        >
                             <i className="fa-solid fa-house text-xs"></i>
                             <span>Lenta</span>
-                        </div>
-                        <div className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-fire text-xs"></i>
-                            <span>Trendlar</span>
-                        </div>
-                        <div className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
+                        </Link>
+                        <Link
+                            to={"/saved"}
+                            className={`flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer ${
+                                window.location.pathname === "/saved" ? "bg-white/20" : ""
+                            }`}
+                        >
                             <i className="fa-solid fa-bookmark text-xs"></i>
                             <span>Saqlanganlar</span>
-                        </div>
-                        <div className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-user-group text-xs"></i>
-                            <span>Jamiyat</span>
-                        </div>
+                        </Link>
                     </div>
                 </Collapse>
             </div>

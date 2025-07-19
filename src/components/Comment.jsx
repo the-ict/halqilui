@@ -4,7 +4,7 @@ import axios from 'axios'
 import ConfirmDeleting from './ConfirmDeleting'
 import { mediaPath } from '../constants/mediaUrl'
 
-export default function Comment({ info }) {
+export default function Comment({ info, postAuthor }) {
     const [editState, setEditState] = useState(false)
     const [confirm, setConfirm] = useState(false)
     const [editInput, setEditInput] = useState(info?.user_message)
@@ -16,6 +16,7 @@ export default function Comment({ info }) {
 
     const commentRef = useRef(null)
 
+    console.log("info:", info)
 
     useEffect(() => {
         const findUser = async () => {
@@ -85,6 +86,23 @@ export default function Comment({ info }) {
         }
     }
 
+    const handleSetSolve = async () => {
+        try {
+            const res = await axios.put(`http://localhost:5000/api/problem/solution`, {
+                problemId: info?.post_id,
+                solutionUserId: user?._id,
+                problemAuthorId: postAuthor,
+                commentId: info?._id
+            }, {
+                withCredentials: true
+            })
+            if (res.data) window.location.reload()
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     return (
         <div className='flex gap-4 items-center justify-between mt-3 relative w-full'>
@@ -136,7 +154,7 @@ export default function Comment({ info }) {
                             editState ? (
                                 <button className='cursor-pointer px-2 py-1 rounded hover:bg-black transition hover:text-white' onClick={handleEdit} >O'zgartirish</button>
                             ) : (
-                                isAdmin && (
+                                (isAdmin || postAuthor === user?._id) && (
                                     <i
                                         onClick={() => setShowMenu(!showMenu)}
                                         className="cursor-pointer text-2xl fa-solid fa-ellipsis-vertical active:bg-gray-100 p-2 rounded-full"></i>
@@ -146,20 +164,34 @@ export default function Comment({ info }) {
                         {
                             showMenu && (
                                 <div className={`absolute right-0 bottom-[-80px] z-20 p-3 rounded bg-black/80 text-white flex flex-col gap-2 shadow-lg`}>
-                                    <div onClick={() => {
-                                        setEditState(true)
-                                        setShowMenu(false)
-                                    }} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
-                                        <span>O'zgartirish</span>
-                                        <i className="fa-regular fa-pen-to-square"></i>
-                                    </div>
-                                    <div onClick={() => {
-                                        setConfirm(!confirm)
-                                        setShowMenu(false)
-                                    }} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
-                                        <span>O'chirish</span>
-                                        <i className="fa-solid fa-trash-can-arrow-up"></i>
-                                    </div>
+                                    {
+                                        postAuthor === user?._id && (
+                                            <div onClick={handleSetSolve} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
+                                                Yechim deb belgilash
+                                            </div>
+                                        )
+                                    }
+
+                                    {
+                                        isAdmin && (
+                                            <>
+                                                <div onClick={() => {
+                                                    setEditState(true)
+                                                    setShowMenu(false)
+                                                }} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
+                                                    <span>O'zgartirish</span>
+                                                    <i className="fa-regular fa-pen-to-square"></i>
+                                                </div>
+                                                <div onClick={() => {
+                                                    setConfirm(!confirm)
+                                                    setShowMenu(false)
+                                                }} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
+                                                    <span>O'chirish</span>
+                                                    <i className="fa-solid fa-trash-can-arrow-up"></i>
+                                                </div>
+                                            </>
+                                        )
+                                    }
                                 </div>
                             )
                         }

@@ -22,6 +22,18 @@ export const userSlice = createSlice({
             state.loading = false;
             state.error = true
         },
+        addSavedProblem: (state, action) => {
+            if (state.user) {
+                state.user.saved_problems.push(action.payload);
+            }
+        },
+        removeSavedProblem: (state, action) => {
+            if (state.user) {
+                state.user.saved_problems = state.user.saved_problems.filter(
+                    (problem) => problem._id !== action.payload._id
+                );
+            }
+        },
         logout: () => {
             return initialState;
         }
@@ -29,6 +41,6 @@ export const userSlice = createSlice({
 })
 
 
-export const { loginStart, loginFailure, loginSuccess, logout } = userSlice.actions
+export const { loginStart, loginFailure, loginSuccess, logout, addSavedProblem, removeSavedProblem } = userSlice.actions
 
 export default userSlice.reducer

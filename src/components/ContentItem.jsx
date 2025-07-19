@@ -3,8 +3,8 @@ import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios"
-import { loginSuccess } from "../redux/userSlice";
-import {mediaPath} from "../constants/mediaUrl"
+import { addSavedProblem, removeSavedProblem } from "../redux/userSlice";
+import { mediaPath } from "../constants/mediaUrl"
 
 export default function ContentItem({ content }) {
     const [user, setUser] = React.useState(null);
@@ -14,7 +14,7 @@ export default function ContentItem({ content }) {
     const state = useSelector((state) => state.user.user);
     const dispatch = useDispatch()
 
-    console.log(state)
+    console.log(state, "state")
     console.log("content: ", content)
     useEffect(() => {
         const getAuthor = async () => {
@@ -41,20 +41,70 @@ export default function ContentItem({ content }) {
         getComments();
         getAuthor();
     }, [content.author_id]);
-    
+
     console.log(state)
     const handleBookmark = async () => {
         try {
             const result = await axios.put(
-                `http://localhost:5000/api/problem/save/${content._id}/${state.user._id}`
+                `http://localhost:5000/api/problem/save/${content._id}/${state._id}`
             );
             if (result.data && result.data.user) {
                 console.log("Bookmark updated:", result.data.user);
-                dispatch(loginSuccess(result.data.user))
+                dispatch(addSavedProblem(content._id))
             }
 
         } catch (error) {
             // error handling
+        }
+    }
+
+    const handleUnBookmark = async () => {
+        try {
+            const result = await axios.put("http://localhost:5000/api/problem/unsave/" + content._id + "/" + state._id);
+
+            if (result.data) {
+                console.log(result.data)
+                dispatch(removeSavedProblem(content._id));
+                window.location.reload()
+            }
+
+        } catch (error) {
+
+        }
+    }
+
+    const handleDelete = async () => {
+        try {
+            const result = await axios.delete(`http://localhost:5000/api/problem/${content._id}`, { withCredentials: true });
+            if (result.data) {
+                console.log("Problem deleted:", result.data);
+                window.location.replace("/")
+            }
+        } catch (error) {
+            console.error("Error deleting problem:", error);
+        }
+    }
+
+    const handleRecomend = async () => {
+        try {
+            const result = await axios.put(`http://localhost:5000/api/problem/recomended/${content._id}/${state._id}`);
+            if(result.data) {
+                window.location.reload()
+            }
+        } catch (error) {
+            console.error("Error recommending problem:", error);
+
+        }
+    }
+
+    const handleUnRecomend = async() => {
+        try {
+            const result = await axios.put(`http://localhost:5000/api/problem/unrecommend/${content._id}/${state._id}`);
+            if(result.data) {
+                window.location.reload()
+            }
+        } catch (error) {
+            console.error("Error unrecommending problem:", error);
         }
     }
 
@@ -69,7 +119,6 @@ export default function ContentItem({ content }) {
         if (!Array.isArray(content.image) || content.image.length === 0) return;
         setCurrentImage((prev) => (prev === content.image.length - 1 ? 0 : prev + 1));
     };
-
     return (
         <div className="w-full cursor-pointer mt-4">
             <div className="flex justify-between items-center mb-4 border-b border-gray-600 pb-4">
@@ -85,23 +134,28 @@ export default function ContentItem({ content }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <i onClick={handleBookmark} className={`fa-${state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content._id) ? 'solid' : 'regular'} fa-bookmark cursor-pointer text-2xl hover:text-indigo-600`}></i>
+                    <i onClick={state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content._id) ? handleUnBookmark : handleBookmark} className={`fa-${state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content._id) ? 'solid' : 'regular'} fa-bookmark cursor-pointer text-2xl hover:text-indigo-600`}></i>
+                    {
+                        user && user._id === state._id ? (
+                            <i onClick={handleDelete} className="fa-solid fa-trash-can cursor-pointer text-2xl"></i>
+                        ) : null
+                    }
                 </div>
             </div>
 
             <div>
                 <p
                     dangerouslySetInnerHTML={{ __html: content.description }}
-                    className="text-sm font-bold line-clamp-2" onClick={() => window.location.href = "/single/" + content._id}/>
+                    className="text-sm font-bold line-clamp-2" onClick={() => window.location.href = "/single/" + content._id} />
             </div>
 
             <div className="content-images flex gap-4 mt-4 h-64 overflow-hidden items-center justify-center relative">
                 {Array.isArray(content.image) && content.image.length > 0 && (
-                        <img
-                            src={mediaPath + "/" + content.image[currentImage]}
-                            alt={`content-img-${currentImage}`}
-                            className="object-contain h-full max-w-full mx-auto"
-                        />
+                    <img
+                        src={mediaPath + "/" + content.image[currentImage]}
+                        alt={`content-img-${currentImage}`}
+                        className="object-contain h-full max-w-full mx-auto"
+                    />
                 )}
             </div>
 
@@ -115,8 +169,8 @@ export default function ContentItem({ content }) {
             <div>
                 <div className="flex justify-between items-center mt-4">
                     <div className="flex items-center gap-2">
-                        <i className="fa-solid fa-heart cursor-pointer text-2xl hover:text-indigo-600"></i>
-                        <p className="text-sm">{content.recomend} Likes</p>
+                        <i onClick={content && Array.isArray(content.recomend) && content.recomend.includes(state._id) ? handleUnRecomend : handleRecomend} className={`fa-solid fa-heart cursor-pointer text-[16px] hover:text-indigo-600 ${content && Array.isArray(content.recomend) && content.recomend.includes(state._id) && "text-red-600"}`}></i>
+                        <p className="text-sm">{Array.isArray(content.recomend) && content.recomend.length} Likes</p>
                     </div>
                     <p className="text-sm">{comments.length} Comments</p>
                 </div>

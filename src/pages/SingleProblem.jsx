@@ -17,7 +17,9 @@ export default function SingleProblem() {
     const [showEmoji, setShowEmoji] = useState(false)
     const [comment, setComment] = useState("")
 
-    const { user } = useSelector(store => store.user)
+    const user = useSelector(store => store.user.user)
+
+    console.log("single problem user: ", user)
 
 
     const location = useLocation()
@@ -121,6 +123,28 @@ export default function SingleProblem() {
                         className="mt-10 p-5 bg-[#27282D] text-white"
                         dangerouslySetInnerHTML={{ __html: post.description }}
                     />
+
+                    {
+                        post?.solution && (
+                            <div
+                                className="mt-10 p-5 bg-[#27282D] text-white"
+                            >
+
+                                <h1 className='text-green-500'>Yechim topilgan</h1>
+
+                                <div className='flex items-start gap-3 mt-3 flex-col'>
+                                    <div className='flex items-center gap-3'>
+                                        <img className='w-[50px] h-[50px] object-cover cursor-pointer rounded-full' src={mediaPath} alt="" />
+                                        <p>username</p>
+                                    </div>
+
+                                    <p className='text-white'>Yechim: {post?.solution}</p>
+                                </div>
+
+                            </div>
+                        )
+                    }
+
                     <h1 className='mt-3'>Izohlar: {comments.length == 0 && 0}</h1>
                     <div className='flex items-center gap-3 mt-3'>{
                         post?.category && (
@@ -180,11 +204,12 @@ export default function SingleProblem() {
                             </div>
                         </div>
                     </div>
+
                     <div className='mt-3'>
                         {
                             comments.map(com => {
                                 return (
-                                    <Comment info={com} key={com?._id} />
+                                    <Comment info={com} key={com?._id} postAuthor={post?.author_id} />
                                 )
                             })}
                     </div>
