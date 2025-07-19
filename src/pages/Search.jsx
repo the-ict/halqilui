@@ -16,13 +16,23 @@ export default function Search() {
 
     const getSearchedProblems = async () => {
         try {
-            if (location?.search) {
-                const res = await axios.get(`http://localhost:5000/api/problem/?search=${location.search.split("=")[1]}`)
-                console.log(res.data)
-                setSearched(res.data)
+            // Parse query params
+            const params = new URLSearchParams(location.search);
+            const search = params.get("search") || "";
+            let category = params.get("category");
+
+            // Build query string
+            let query = `search=${encodeURIComponent(search)}`;
+            if (category) {
+                query += `&category=${encodeURIComponent(category)}`;
             }
+
+            console.log(`Searching for: ${search} in categories: ${category}`);
+            const res = await axios.get(`http://localhost:5000/api/problem/?${query}`);
+            console.log(res.data);
+            setSearched(res.data);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 

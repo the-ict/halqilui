@@ -9,7 +9,7 @@ export default function Problem({ info }) {
         const findUser = async () => {
             try {
                 if (info?.author_id) {
-                    const res = await axios.get(`/api/user/${info?.author_id}`)
+                    const res = await axios.get(`http://localhost:5000/api/user/${info?.author_id}`)
                     setUserPic(res.data.profile_pic)
                 }
             } catch (error) {
@@ -27,12 +27,12 @@ export default function Problem({ info }) {
                     userPic ? (
                         <img className='w-[50px] h-[50px] rounded-full object-cover cursor-pointer' src={mediaPath + "/" + userPic} alt="" />
                     ) : (
-                        <i className="cursor-pointer fa-solid fa-user"></i>
+                        <i className="cursor-pointer fa-solid text-[14px] fa-user"></i>
                     )
                 }
                 <div>
-                    <h3 className='uppercase max-2xl:text-[12px] line-clamp-2'>{info?.title}</h3>
-                    <p className='w-full overflow-hidde line-clamp-1 max-2xl:text-[12px]'>{info?.description}</p>
+                    <h3 className='uppercase max-2xl:text-[12px] text-[14px] font-bold line-clamp-2'>{info?.title}</h3>
+                    <p className='w-full overflow-hidde line-clamp-1 max-2xl:text-[12px]' dangerouslySetInnerHTML={{ __html: info?.description }}/>
                 </div>
             </div>
             <button className='cursor-pointer bg-[#E57676] hover:bg-red-500 transition px-2 py-1 rounded text-white outline-none'>Ko'proq</button>

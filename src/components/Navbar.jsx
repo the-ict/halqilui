@@ -16,7 +16,7 @@ export default function Navbar() {
     const handleNavigate = (e) => {
         e.preventDefault();
         if (search) {
-            window.location.href = `/search/?q=${search}`;
+            window.location.href = `/search/?search=${search}`;
         } else {
             window.location.href = '/';
         }
