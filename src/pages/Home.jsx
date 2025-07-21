@@ -19,7 +19,7 @@ export default function Home() {
         <div>
             <Navbar /> 
 
-            <div className="content flex items-start justify-between gap-10">
+            <div className="content flex items-start justify-between gap-10 relative">
                 <Sidebar />
                 <Contents />
                 <Rating />

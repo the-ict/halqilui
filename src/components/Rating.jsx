@@ -1,6 +1,6 @@
 export default function Rating() {
     return (
-        <div className="flex-3 p-4 max-h-screen h-[calc(100vh-70px)] overflow-y-auto border-l border-white/30 bg-black text-white">
+        <div className="flex-3 sticky top-0 p-4 max-h-screen h-[calc(100vh-70px)] overflow-y-auto border-l border-white/30 bg-black text-white">
             <h2 className="font-bold text-xl mb-4">Rating</h2>
 
             <div className="mt-4 space-y-4">

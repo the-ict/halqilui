@@ -55,9 +55,8 @@ export default function Sidebar() {
         window.location.href = `/search/?category=${category}`;
     }
 
-
     return (
-        <div className="sidebar no-scrollbar h-[calc(100vh-70px)] flex-2 bg-black text-white p-6 border-r border-white/20 max-h-screen overflow-y-auto">
+        <div className="sidebar sticky top-0 left-0 no-scrollbar h-screen flex-2 bg-black text-white p-6 border-r border-white/20 max-h-screen overflow-y-auto">
             {/* Main Section */}
             <div className="mt-0">
                 <div

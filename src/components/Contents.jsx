@@ -21,7 +21,7 @@ export default function Contents() {
         getContents();
     }, []);
     return (
-        <div className="flex-8 p-4">
+        <div className="flex-8 p-4 overflow-y-auto no-scrollbar">
             {
                 contents.map((content) => (
                     <ContentItem key={content._id} content={content} />

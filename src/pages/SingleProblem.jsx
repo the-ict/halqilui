@@ -16,6 +16,7 @@ export default function SingleProblem() {
     const [problems, setProblems] = useState([])
     const [showEmoji, setShowEmoji] = useState(false)
     const [comment, setComment] = useState("")
+    const [solution, setSolution] = useState("")
 
     const user = useSelector(store => store.user.user)
 
@@ -41,7 +42,6 @@ export default function SingleProblem() {
                 if (location?.pathname) {
                     const res = await axios.put(`http://localhost:5000/api/problem/view/${location.pathname.split("/")[2]}`)
                     setPost(res.data)
-                    console.log(res.data, "post")
                 }
             } catch (error) {
                 console.log(error)
@@ -55,6 +55,22 @@ export default function SingleProblem() {
     useEffect(() => {
         getComments()
     }, [comment])
+
+    useEffect(() => {
+        const getSolution = async () => {
+            try {
+                if (post?.solution) {
+                    const res = await axios.get(`http://localhost:5000/api/comment/${post?.solution}`)
+                    setSolution(res.data.user_message)
+                    console.log("solution: ", res.data.user_message)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
+        getSolution()
+    }, [post?.solution])
 
     useEffect(() => {
         const findUser = async () => {
@@ -80,10 +96,6 @@ export default function SingleProblem() {
         }
         getProblems()
 
-    }, [post])
-
-    useEffect(() => {
-        console.log(post, "post in useEffect")
     }, [post])
 
     const handleComment = async () => {
@@ -133,12 +145,11 @@ export default function SingleProblem() {
                                 <h1 className='text-green-500'>Yechim topilgan</h1>
 
                                 <div className='flex items-start gap-3 mt-3 flex-col'>
-                                    <div className='flex items-center gap-3'>
-                                        <img className='w-[50px] h-[50px] object-cover cursor-pointer rounded-full' src={mediaPath} alt="" />
-                                        <p>username</p>
-                                    </div>
-
-                                    <p className='text-white'>Yechim: {post?.solution}</p>
+                                    <p className='text-white font-bold'>Yechim:
+                                        <span className='font-italic ml-2 text-gray-300 font-normal'>
+                                            {solution}
+                                        </span>
+                                    </p>
                                 </div>
 
                             </div>

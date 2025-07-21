@@ -5,6 +5,7 @@ import NewPost from "../components/NewPost"
 import { logout } from "../redux/userSlice"
 import { mediaPath } from '../constants/mediaUrl'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 export default function Navbar() {
     const [showProfile, setShowProfile] = useState(false)
@@ -19,6 +20,19 @@ export default function Navbar() {
             window.location.href = `/search/?search=${search}`;
         } else {
             window.location.href = '/';
+        }
+    }
+
+
+    const handleLogout = async () => {
+        try {
+            const result = await axios.get("http://localhost:5000/api/auth/logout")
+            if (result.data) {
+                dispatch(logout())
+                window.location.href = "/login"
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -59,10 +73,7 @@ export default function Navbar() {
                             <button onClick={() => setShowNew(true)} className='text-gray-400 hover:text-white cursor-pointer'>
                                 <i className="fa-solid fa-plus text-[20px]"></i>
                             </button>
-                            <button onClick={() =>{
-                                 dispatch(logout())
-                                 window.location.href = "/login"
-                            }} className='text-gray-400 hover:text-white cursor-pointer'>
+                            <button onClick={handleLogout} className='text-gray-400 hover:text-white cursor-pointer'>
                                 <i className="fa-solid fa-right-from-bracket text-[20px]"></i>
                             </button>
                         </>

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import ConfirmDeleting from './ConfirmDeleting'
+import { AiOutlineSolution } from "react-icons/ai";
 import { mediaPath } from '../constants/mediaUrl'
 
 export default function Comment({ info, postAuthor }) {
@@ -11,6 +12,7 @@ export default function Comment({ info, postAuthor }) {
     const [author, setAuthor] = useState({})
     const { user } = useSelector(store => store.user)
     const [showMenu, setShowMenu] = useState(false)
+    const [confirmSolving, setConfirmSolving] = useState(false)
 
     const isAdmin = user?._id == info?.user_id
 
@@ -88,7 +90,17 @@ export default function Comment({ info, postAuthor }) {
 
     const handleSetSolve = async () => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/problem/solution`, {
+            console.log("postauthor: ", postAuthor)
+            console.log("user: ", user?._id)
+
+            console.log("solution request body: ", {
+                problemId: info?.post_id,
+                solutionUserId: user?._id,
+                problemAuthorId: postAuthor,
+                commentId: info?._id
+            })
+
+            const res = await axios.put(`http://localhost:5000/api/problem/solution/update`, {
                 problemId: info?.post_id,
                 solutionUserId: user?._id,
                 problemAuthorId: postAuthor,
@@ -144,6 +156,16 @@ export default function Comment({ info, postAuthor }) {
                                                 <i onClick={handleDislike} className="cursor-pointer fa-regular fa-thumbs-down"></i>
                                             )
                                         }
+
+                                        {
+                                            postAuthor === user?._id && (
+                                                info?.solution ? (
+                                                    <i className="text-white fa-solid fa-check"></i>
+                                                ) : (
+                                                    <AiOutlineSolution onClick={() => setConfirmSolving(true)} className='cursor-pointer text-[20px] text-white-500' />
+                                                )
+                                            )
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -154,7 +176,7 @@ export default function Comment({ info, postAuthor }) {
                             editState ? (
                                 <button className='cursor-pointer px-2 py-1 rounded hover:bg-black transition hover:text-white' onClick={handleEdit} >O'zgartirish</button>
                             ) : (
-                                (isAdmin || postAuthor === user?._id) && (
+                                isAdmin && (
                                     <i
                                         onClick={() => setShowMenu(!showMenu)}
                                         className="cursor-pointer text-2xl fa-solid fa-ellipsis-vertical active:bg-gray-100 p-2 rounded-full"></i>
@@ -164,14 +186,6 @@ export default function Comment({ info, postAuthor }) {
                         {
                             showMenu && (
                                 <div className={`absolute right-0 bottom-[-80px] z-20 p-3 rounded bg-black/80 text-white flex flex-col gap-2 shadow-lg`}>
-                                    {
-                                        postAuthor === user?._id && (
-                                            <div onClick={handleSetSolve} className='px-2 py-1 rounded hover:bg-gray-700 cursor-pointer transition flex items-center justify-between gap-3'>
-                                                Yechim deb belgilash
-                                            </div>
-                                        )
-                                    }
-
                                     {
                                         isAdmin && (
                                             <>
@@ -204,6 +218,18 @@ export default function Comment({ info, postAuthor }) {
                                     setConfirm,
                                     media_id: info?._id,
                                     yes: handleDelete
+                                }} />
+                            )
+                        }
+                        {
+                            confirmSolving && (
+                                <ConfirmDeleting info={{
+                                    text: "Rostdan ham muammoni yechimi shumi ?", no: (setMenu) => {
+                                        setMenu(false)
+                                    },
+                                    setConfirm: setConfirmSolving,
+                                    media_id: info?._id,
+                                    yes: handleSetSolve
                                 }} />
                             )
                         }
