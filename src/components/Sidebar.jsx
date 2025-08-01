@@ -56,7 +56,7 @@ export default function Sidebar() {
     }
 
     return (
-        <div className="sidebar sticky top-0 left-0 no-scrollbar h-screen flex-2 bg-black text-white p-6 border-r border-white/20 max-h-screen overflow-y-auto">
+        <div className="sidebar max-md:hidden sticky top-0 left-0 no-scrollbar h-screen flex-2 bg-black text-white p-6 border-r border-white/20 max-h-screen overflow-y-auto">
             {/* Main Section */}
             <div className="mt-0">
                 <div
@@ -121,40 +121,6 @@ export default function Sidebar() {
                 </Collapse>
             </div>
 
-            {/* Useful Programming Tabs */}
-            <div className="mt-8">
-                <div
-                    className="text-gray-400 uppercase text-xs mb-2 flex items-center justify-between cursor-pointer"
-                    onClick={() => toggleSection("programming")}
-                >
-                    <span>Dasturchilar uchun</span>
-                    <i className={`fa-solid fa-arrow-${openSections.programming ? "up" : "down"} text-xs`}></i>
-                </div>
-                <Collapse open={openSections.programming}>
-                    <div>
-                        <Link to="https://github.com/azat-io/you-dont-know-js-ru" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-code text-xs"></i>
-                            <span>You Don't Know JS</span>
-                        </Link>
-                        <Link to="https://www.commandlinefu.com/commands/browse" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-terminal text-xs"></i>
-                            <span>CLI Commands</span>
-                        </Link>
-                        <Link to="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-book text-xs"></i>
-                            <span>MDN Web Docs</span>
-                        </Link>
-                        <Link to="https://github.com/leonardomso/33-js-concepts" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-lightbulb text-xs"></i>
-                            <span>33 JS concepts every developer should know</span>
-                        </Link>
-                        <Link to="https://github.com/denysdovhan/wtfjs" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 mb-3 hover:bg-white/10 p-2 rounded cursor-pointer">
-                            <i className="fa-solid fa-bug text-xs"></i>
-                            <span>JS WTF</span>
-                        </Link>
-                    </div>
-                </Collapse>
-            </div>
         </div>
     );
 }

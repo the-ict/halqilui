@@ -38,11 +38,11 @@ export default function Navbar() {
 
     return (
         <div className='flex items-center justify-between p-4 w-full bg-black text-white'>
-            <Link to="/" className='pl-5'>
+            <Link to="/" className='pl-5 max-md:hidden'>
                 <h1>Halqil</h1>
             </Link>
 
-            <form onSubmit={(e) => handleNavigate(e)} action="" className='flex items-center gap-2 w-[40%] bg-white/10 p-2 rounded'>
+            <form onSubmit={(e) => handleNavigate(e)} action="" className='flex items-center gap-2 w-[70%] bg-white/10 p-2 rounded'>
                 <input onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Search..." className='flex-1 outline-none border-none' />
                 <button onClick={(e) => handleNavigate(e)} type="submit" className='text-gray-400 hover:text-white cursor-pointer'>
                     <i className="fa-solid fa-magnifying-glass"></i>
@@ -57,7 +57,7 @@ export default function Navbar() {
             }
 
 
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-3'>
                 {
                     user ? (
                         <>

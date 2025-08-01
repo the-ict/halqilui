@@ -28,10 +28,6 @@ export default function Home() {
         }
 
         findUserFromGoogle()
-
-        if (!state || Object.keys(state).length === 0 && state.loading === false) {
-            window.location.href = "/login";
-        }
     }, [])
 
     return (
