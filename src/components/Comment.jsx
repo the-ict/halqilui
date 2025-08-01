@@ -125,7 +125,12 @@ export default function Comment({ info, postAuthor }) {
                             <div className='flex gap-3 items-center flex-1'>
                                 {
                                     author?.profile_pic ? (
-                                        <img className='w-[30px] h-[30px] object-cover rounded-full cursor-pointer' src={mediaPath + "/" + author?.profile_pic} alt="comment profile pic" />
+
+                                        user.profile_pic.includes("google") ? (
+                                            <img onClick={() => setShowProfile(true)} src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                        ) : (
+                                            <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                        )
                                     ) : (
                                         <i className="cursor-pointer fa-solid fa-user text-[30px]"></i>
                                     )

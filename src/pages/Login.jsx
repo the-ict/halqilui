@@ -8,7 +8,6 @@ import {
 import { ToastContainer, toast } from "react-toastify"
 
 
-
 export default function Login() {
     const [rememberMe, setRememberMe] = useState(false)
     const [password, setPassword] = useState("")
@@ -73,7 +72,8 @@ export default function Login() {
                     <span className='h-0.5 flex-1 bg-gray-800'></span>
                 </div>
                 <button
-                    className='rounded p-2 border-2 border-gray-600 hover:bg-gray-600 hover:text-white transition'>
+                onClick={() => window.location.href = "http://localhost:5000/google/auth"}
+                    className='rounded cursor-pointer p-2 border-2 border-gray-600 hover:bg-gray-600 hover:text-white transition'>
                     Google bilan
                     <i className="ml-3 fa-brands fa-google"></i>
                 </button>

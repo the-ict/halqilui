@@ -174,7 +174,11 @@ export default function SingleProblem() {
                     <div className='flex items-center gap-4 w-full mt-3 h-max'>
                         {
                             user?.profile_pic ? (
-                                <img className='w-[50px] h-[50px] object-cover rounded-full cursor-pointer' src={mediaPath + "/" + user?.profile_pic} alt="profile picture" />
+                                user.profile_pic.includes("google") ? (
+                                    <img onClick={() => setShowProfile(true)} src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                ) : (
+                                    <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                )
                             ) : (
                                 <i className="cursor-pointer fa-solid fa-user"></i>
                             )

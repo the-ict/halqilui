@@ -64,7 +64,11 @@ export default function Navbar() {
                             <Link to={`/`}>
                                 {
                                     user.profile_pic ? (
-                                        <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                        user.profile_pic.includes("google") ? (
+                                            <img onClick={() => setShowProfile(true)} src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                        ) : (
+                                            <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                        )
                                     ) : (
                                         <i onClick={() => setShowProfile(true)} className="fa-solid fa-user text-[20px] cursor-pointer"></i>
                                     )
