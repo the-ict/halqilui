@@ -31,7 +31,7 @@ export default function Register() {
                 email
             }, { withCredentials: true })
             dispatch(loginSuccess(res.data))
-            
+
             toast("Ro'yhatdan o'tdingiz!")
             if (res.data) window.location.replace("/")
         } catch (error) {
@@ -72,6 +72,7 @@ export default function Register() {
                     <span className='h-0.5 flex-1 bg-gray-800'></span>
                 </div>
                 <button
+                    onClick={() => window.location.href("http://localhost:5000/google/auth")}
                     className='rounded p-2 border-2 border-gray-600 hover:bg-gray-600 hover:text-white transition'>
                     Google bilan
                     <i className="ml-3 fa-brands fa-google"></i>
