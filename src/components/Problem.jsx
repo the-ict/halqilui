@@ -25,14 +25,18 @@ export default function Problem({ info }) {
             <div className='flex items-center gap-3'>
                 {
                     userPic ? (
-                        <img className='w-[50px] h-[50px] rounded-full object-cover cursor-pointer' src={mediaPath + "/" + userPic} alt="" />
+                        userPic.includes("google") ? (
+                            <img src={userPic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                        ) : (
+                            <img src={mediaPath + "/" + userPic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                        )
                     ) : (
                         <i className="cursor-pointer fa-solid text-[14px] fa-user"></i>
                     )
                 }
                 <div>
                     <h3 className='uppercase max-2xl:text-[12px] text-[14px] font-bold line-clamp-2'>{info?.title}</h3>
-                    <p className='w-full overflow-hidde line-clamp-1 max-2xl:text-[12px]' dangerouslySetInnerHTML={{ __html: info?.description }}/>
+                    <p className='w-full overflow-hidde line-clamp-1 max-2xl:text-[12px]' dangerouslySetInnerHTML={{ __html: info?.description }} />
                 </div>
             </div>
             <button className='cursor-pointer bg-[#E57676] hover:bg-red-500 transition px-2 py-1 rounded text-white outline-none'>Ko'proq</button>

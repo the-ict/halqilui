@@ -18,6 +18,7 @@ export default function ContentItem({ content }) {
     console.log("content: ", content)
     useEffect(() => {
         const getAuthor = async () => {
+            if (!content.author_id) return alert("Siz hali ro'yhatdan o'tmadingiz")
             try {
                 const res = await axios.get(`http://localhost:5000/api/user/${content.author_id}`);
                 console.log("Author data:", res.data);
@@ -29,6 +30,7 @@ export default function ContentItem({ content }) {
         };
 
         const getComments = async () => {
+            if (!content._id) return alert("Hatolik yuz berdi, Content yuklanmagan")
             try {
                 const res = await axios.get(`http://localhost:5000/api/comment/all/${content._id}`);
                 setComments(res.data);
@@ -44,6 +46,7 @@ export default function ContentItem({ content }) {
 
     console.log(state)
     const handleBookmark = async () => {
+        if (!content?._id || !state?._id) return alert("Siz hali ro'yhatdan o'tmadingiz")
         try {
             const result = await axios.put(
                 `http://localhost:5000/api/problem/save/${content._id}/${state._id}`
@@ -59,6 +62,7 @@ export default function ContentItem({ content }) {
     }
 
     const handleUnBookmark = async () => {
+        if (!content?._id || !state?._id) return alert("Siz hali ro'yhatdan o'tmadingiz")
         try {
             const result = await axios.put("http://localhost:5000/api/problem/unsave/" + content._id + "/" + state._id);
 
@@ -74,8 +78,9 @@ export default function ContentItem({ content }) {
     }
 
     const handleDelete = async () => {
+        if (!content?._id) return alert("Siz hali ro'yhatdan o'tmadingiz")
         try {
-            const result = await axios.delete(`http://localhost:5000/api/problem/${content._id}`, { withCredentials: true });
+            const result = await axios.delete(`http://localhost:5000/api/problem/${content?._id}`, { withCredentials: true });
             if (result.data) {
                 console.log("Problem deleted:", result.data);
                 window.location.replace("/")
@@ -86,9 +91,10 @@ export default function ContentItem({ content }) {
     }
 
     const handleRecomend = async () => {
+        if (!content?._id || !state?._id) return alert("Siz hali ro'yhatdan o'tmadingiz")
         try {
-            const result = await axios.put(`http://localhost:5000/api/problem/recomended/${content._id}/${state._id}`);
-            if(result.data) {
+            const result = await axios.put(`http://localhost:5000/api/problem/recomended/${content?._id}/${state?._id}`);
+            if (result.data) {
                 window.location.reload()
             }
         } catch (error) {
@@ -97,10 +103,12 @@ export default function ContentItem({ content }) {
         }
     }
 
-    const handleUnRecomend = async() => {
+    const handleUnRecomend = async () => {
+        if (!content?._id || !state?._id) return alert("Siz hali ro'yhatdan o'tmadingiz")
+
         try {
-            const result = await axios.put(`http://localhost:5000/api/problem/unrecommend/${content._id}/${state._id}`);
-            if(result.data) {
+            const result = await axios.put(`http://localhost:5000/api/problem/unrecommend/${content?._id}/${state?._id}`);
+            if (result.data) {
                 window.location.reload()
             }
         } catch (error) {
@@ -125,7 +133,11 @@ export default function ContentItem({ content }) {
                 <div className="flex items-center">
                     {
                         user?.profile_pic ? (
-                            <img className="w-[50px] h-[50px] rounded-full object-cover cursor-pointer" src="https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" alt="user image" />
+                            user?.profile_pic.includes("google") ? (
+                                <img onClick={() => setShowProfile(true)} src={user?.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                            ) : (
+                                <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user?.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                            )
                         ) : (
                             <i className="fa-regular fa-user cursor-pointer text-2xl"></i>
                         )
@@ -134,9 +146,9 @@ export default function ContentItem({ content }) {
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <i onClick={state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content._id) ? handleUnBookmark : handleBookmark} className={`fa-${state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content._id) ? 'solid' : 'regular'} fa-bookmark cursor-pointer text-2xl hover:text-indigo-600`}></i>
+                    <i onClick={state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content._id) ? handleUnBookmark : handleBookmark} className={`fa-${state && Array.isArray(state.saved_problems) && state.saved_problems.includes(content?._id) ? 'solid' : 'regular'} fa-bookmark cursor-pointer text-2xl hover:text-indigo-600`}></i>
                     {
-                        user && user._id === state._id ? (
+                        user && user._id === state?._id ? (
                             <i onClick={handleDelete} className="fa-solid fa-trash-can cursor-pointer text-2xl"></i>
                         ) : null
                     }
@@ -169,7 +181,7 @@ export default function ContentItem({ content }) {
             <div>
                 <div className="flex justify-between items-center mt-4">
                     <div className="flex items-center gap-2">
-                        <i onClick={content && Array.isArray(content.recomend) && content.recomend.includes(state._id) ? handleUnRecomend : handleRecomend} className={`fa-solid fa-heart cursor-pointer text-[16px] hover:text-indigo-600 ${content && Array.isArray(content.recomend) && content.recomend.includes(state._id) && "text-red-600"}`}></i>
+                        <i onClick={content && Array.isArray(content.recomend) && content.recomend.includes(state?._id) ? handleUnRecomend : handleRecomend} className={`fa-solid fa-heart cursor-pointer text-[16px] hover:text-indigo-600 ${content && Array.isArray(content.recomend) && content.recomend.includes(state?._id) && "text-red-600"}`}></i>
                         <p className="text-sm">{Array.isArray(content.recomend) && content.recomend.length} Likes</p>
                     </div>
                     <p className="text-sm">{comments.length} Comments</p>

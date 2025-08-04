@@ -19,6 +19,10 @@ export default function Home() {
             try {
                 const res = await axios.get("http://localhost:5000/google/me", { withCredentials: true })
                 console.log(res.data)
+                if(!res.data?.username) {
+                    dispatch(loginFailure()) 
+                    return
+                }
 
                 dispatch(loginSuccess(res.data))
             } catch (error) {

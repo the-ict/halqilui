@@ -9,6 +9,7 @@ import { loginSuccess } from '../redux/userSlice'
 export default function Profile({ setProfile }) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [isGoogle, setIsGoogle] = useState(false)
   const [file, setFile] = useState([])
   const [confirmPassword, setConfirmPassword] = useState("")
   const [oldPassword, setOldPassword] = useState("")
@@ -69,12 +70,19 @@ export default function Profile({ setProfile }) {
           <h3 className='font-bold text-2xl max-sm:text-[14px]'>Hisobni o'zgartirish</h3>
           <label htmlFor="profile_pic">
             {
-              user?.profile_pic ? (
-                <img className='w-[50px] h-[50px] cursor-pointer object-contain' src={mediaPath + "/" + user?.profile_pic} alt="userprofile" />
+              file?.name ? (
+
+                <img src={URL.createObjectURL(file)} alt="profile-img" className='w-[50px] h-[50px] cursor-pointer object-cover rounded-full' />
+
+
               ) : (
 
-                file?.name ? (
-                  <img src={URL.createObjectURL(file)} alt="profile-img" className='w-[50px] h-[50px] cursor-pointer object-cover rounded-full' />
+                user?.profile_pic ? (
+                  user?.profile_pic.includes("google") ? (
+                    <img src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                  ) : (
+                    <img src={mediaPath + "/" + user?.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                  )
                 ) : < i className="cursor-pointer fa-solid fa-user"></i>
               )
             }
@@ -84,16 +92,16 @@ export default function Profile({ setProfile }) {
           }} />
         </div>
         <p className='w-full mt-3 font-normal' >Usernameni kiriting:</p>
-        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username"/>
+        <input onChange={(e) => setUsername(e.target.value)} placeholder={user.username} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="username" />
         <p className='w-full mt-3 font-normal'>Eski parolni kiriting:</p>
-        <input onChange={(e) => setOldPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder='*****'  />
+        <input onChange={(e) => setOldPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder='*****' />
         <p className='w-full mt-3 font-normal'>Parolni kiriting:</p>
         <input onChange={(e) => setPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder="password" />
         <p className='w-full mt-3 font-normal'>Parolni qayta kiriting:</p>
         <input onChange={e => setConfirmPassword(e.target.value)} className='w-full mt-1 border-2 border-blue-300 px-2 py-1 rounded' type="password" placeholder="confirm password" />
         <div className='flex items-center gap-3 mt-5'>
           <button
-          onClick={() => setProfile(false)}
+            onClick={() => setProfile(false)}
             className='cursor-pointer px-3 py-2 bg-red-500 rounded'>Bekor qilish</button>
           <button
             onClick={handleSubmit}

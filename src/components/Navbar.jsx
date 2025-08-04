@@ -13,6 +13,7 @@ export default function Navbar() {
     const [showNew, setShowNew] = useState(false)
     const { user } = useSelector(store => store.user)
     const dispatch = useDispatch()
+    console.log("navbar user: ", user)
 
     const handleNavigate = (e) => {
         e.preventDefault();
@@ -65,7 +66,7 @@ export default function Navbar() {
                                 {
                                     user.profile_pic ? (
                                         user.profile_pic.includes("google") ? (
-                                            <img onClick={() => setShowProfile(true)} src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                            <img onClick={() => window.location.reload()} src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
                                         ) : (
                                             <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
                                         )

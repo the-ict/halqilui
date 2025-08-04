@@ -126,10 +126,10 @@ export default function Comment({ info, postAuthor }) {
                                 {
                                     author?.profile_pic ? (
 
-                                        user.profile_pic.includes("google") ? (
+                                        user?.profile_pic.includes("google") ? (
                                             <img onClick={() => setShowProfile(true)} src={user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
                                         ) : (
-                                            <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
+                                            <img onClick={() => setShowProfile(true)} src={mediaPath + "/" + user?.profile_pic} alt="Profile" className='w-10 h-10 rounded-full cursor-pointer' />
                                         )
                                     ) : (
                                         <i className="cursor-pointer fa-solid fa-user text-[30px]"></i>
