@@ -57,7 +57,7 @@ export default function Search() {
         <div>
             <Navbar />
             <div className='px-30 flex max-sm:flex-col font-inter gap-4 mt-10 overflow-visible h-screen max-md:px-2'>
-                <div className='flex-1 mt-3 sticky bg-[#111] border-[1px] rounded-lg p-5 max-sm:bg-white top-20 flex h-max flex-col items-center transition justify-between gap-4'>
+                <div className='flex-1 mt-3 sticky bg-[#111] border-[1px] rounded-lg p-5 top-20 flex h-max flex-col items-center transition justify-between gap-4'>
                     <p className='w-full font-bold max-md:text-[14px]'>Qidirish:</p>
                     <input
                         value={searchInput}
